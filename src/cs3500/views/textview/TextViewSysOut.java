@@ -1,5 +1,6 @@
 package cs3500.views.textview;
 
+import cs3500.IController;
 import cs3500.ReadOnlyAnimation;
 import cs3500.views.AbstractTextView;
 
@@ -23,11 +24,16 @@ public class TextViewSysOut extends AbstractTextView {
 
   @Override
   public void refresh() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("Text view cannot refresh");
   }
 
   @Override
   public void makeVisible() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("Text view cannot makeVisible");
+  }
+
+  @Override
+  public void addClickListener(IController listener) {
+    throw new UnsupportedOperationException("Text view cannot addClickListener");
   }
 }

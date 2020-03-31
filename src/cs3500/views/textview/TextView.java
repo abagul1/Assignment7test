@@ -3,6 +3,7 @@ package cs3500.views.textview;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import cs3500.IController;
 import cs3500.ReadOnlyAnimation;
 import cs3500.views.AbstractTextView;
 
@@ -38,11 +39,16 @@ public class TextView extends AbstractTextView {
 
   @Override
   public void refresh() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("text view cannot refresh");
   }
 
   @Override
   public void makeVisible() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("text view cannot makeVisible");
+  }
+
+  @Override
+  public void addClickListener(IController listener) {
+    throw new UnsupportedOperationException("text view cannot addClickListener");
   }
 }

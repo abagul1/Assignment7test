@@ -14,6 +14,8 @@ public interface IView {
    */
   void makeVisible();
 
+  void addClickListener(IController listener);
+
   /**
    * Command to execute the desired view.
    */

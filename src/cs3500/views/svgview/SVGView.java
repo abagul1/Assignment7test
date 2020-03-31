@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import cs3500.IController;
 import cs3500.ReadOnlyAnimation;
 import cs3500.views.AbstractTextView;
 
@@ -169,11 +170,16 @@ public class SVGView extends AbstractTextView {
 
   @Override
   public void refresh() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("SVG view cannot refresh");
   }
 
   @Override
   public void makeVisible() {
-    //Method doesn't apply
+    throw new UnsupportedOperationException("SVG view cannot makeVisible");
+  }
+
+  @Override
+  public void addClickListener(IController listener) {
+    throw new UnsupportedOperationException("SVG view cannot addClickListener");
   }
 }
