@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import javax.swing.Timer;
 import cs3500.IAnimation;
+import cs3500.IController;
 import cs3500.IView;
+import cs3500.controller.AnimationController;
 import cs3500.model.AnimationModel;
 import cs3500.views.ViewCreator;
 
@@ -60,20 +62,15 @@ public final class AnimationRunner {
     AnimationBuilder<IAnimation> ab = new AnimationModel.Builder();
     ViewCreator vc = new ViewCreator();
     try {
-      IView view = vc.create(viewType, ar.parseFile(new FileReader(inputFileName),
-              ab), outputFileName, tempo);
-
-      if (viewType.equals("visual")) {
-        Timer t = new Timer(1000 / tempo, e -> view.execute());
-        t.start();
-        t.setRepeats(true);
-      }
-      else {
-        view.execute();
-      }
+      IAnimation a = ar.parseFile(new FileReader(inputFileName),
+              ab);
+      IView view = vc.create(viewType, a, outputFileName, tempo);
+      IController controller = new AnimationController(view);
+      controller.playAnimation(a, viewType, tempo);
     }
     catch (FileNotFoundException e) {
       throw new IllegalArgumentException("File is invalid");
     }
+
   }
 }
