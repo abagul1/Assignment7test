@@ -2,8 +2,6 @@ package cs3500.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,12 +9,11 @@ import java.util.Map;
 
 import cs3500.IAnimation;
 import cs3500.IElement;
-import cs3500.IOperation;
 import cs3500.animator.util.AnimationBuilder;
 import cs3500.elements.Ellipse;
 import cs3500.elements.Posn;
 import cs3500.elements.Rectangle;
-import cs3500.operations.Operation;
+import cs3500.motions.Motion;
 
 
 /**
@@ -25,7 +22,7 @@ import cs3500.operations.Operation;
 public class AnimationModel implements IAnimation {
 
   private Map<String, IElement> elements;
-  private List<IOperation> operations;
+  private List<Motion> motions;
   private Map<String, List<String>> verboseOps;
   private Map<String, String> declaredShapes;
 
@@ -43,9 +40,9 @@ public class AnimationModel implements IAnimation {
    */
   public AnimationModel(int x, int y, int width, int height) {
     elements = new LinkedHashMap<>();
-    operations = new ArrayList<>();
     verboseOps = new LinkedHashMap<>();
     declaredShapes = new LinkedHashMap<>();
+    motions = new ArrayList<>();
     currentTick = 0;
     windowWidth = width;
     windowHeight = height;
@@ -88,9 +85,9 @@ public class AnimationModel implements IAnimation {
         throw new IllegalArgumentException("Element id doesn't exist");
       }
     }
-
-    for (int i = t1; i < t2; i++) {
-      operations.add(new Operation(dx, dy, dw, dh, dr, dg, db, i, elements.get(name)));
+    if (t1 < t2) {
+      motions.add(new Motion(elements.get(name), t1, x1, y1, w1, h1, r1,
+              g1, b1, t2, x2, y2, w2, h2, r2, g2, b2));
     }
     this.addVerboseMotion(name, t1, x1, y1, w1, h1, r1, g1, b1, t2, x2, y2, w2, h2, r2, g2, b2);
   }
@@ -154,8 +151,8 @@ public class AnimationModel implements IAnimation {
     if (elements == null) {
       throw new IllegalStateException("Error: Element map is null");
     }
-    if (operations == null) {
-      throw new IllegalStateException("Error: Operations is null");
+    if (motions == null) {
+      throw new IllegalStateException("Error: Motions is null");
     }
   }
 
@@ -167,8 +164,8 @@ public class AnimationModel implements IAnimation {
     if (elements == null) {
       throw new IllegalStateException("Error: Element map is null");
     }
-    if (operations == null) {
-      throw new IllegalStateException("Error: Operations is null");
+    if (motions == null) {
+      throw new IllegalStateException("Error: motions is null");
     }
     if (declaredShapes.containsKey(id)) {
       throw new IllegalArgumentException("Cannot have duplicate elements");
@@ -215,73 +212,72 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void executeOperations() {
-    List<IOperation> currentOps = new ArrayList<>();
-    while (!operations.isEmpty()) {
-      for (Iterator<IOperation> iterator = operations.iterator(); iterator.hasNext();) {
-        IOperation op = iterator.next();
-        if (op.getTickToFireAt() == currentTick) {
-          for (IOperation co : currentOps) {
-            if (co.getElementId().equals(op.getElementId()) && op.getClass() == co.getClass()) {
+    List<Motion> currentMotions = new ArrayList<>();
+    while (!motions.isEmpty()) {
+      for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
+        Motion m = iterator.next();
+        if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
+          for (Motion cm : currentMotions) {
+            if (cm.getElementId().equals(m.getElementId())
+                    && m.motionType().equals(cm.motionType())) {
               throw new IllegalArgumentException("Cannot have two motions overlap");
             }
           }
-          currentOps.add(op);
-          op.fire();
+          currentMotions.add(m);
+        }
+        m.fire(currentTick);
+        if (m.getEndTick() == currentTick - 1) {
           iterator.remove();
         }
       }
+      currentMotions.clear();
       currentTick++;
-      currentOps.clear();
     }
   }
 
   @Override
   public void executeOperationsUntil(int tick) {
-    List<IOperation> currentOps = new ArrayList<>();
+    List<Motion> currentMotions = new ArrayList<>();
     for (currentTick = 0; currentTick < tick; currentTick++) {
-      if (operations.isEmpty()) {
+      if (motions.isEmpty()) {
         break;
       }
-      for (Iterator<IOperation> iterator = operations.iterator(); iterator.hasNext();) {
-        IOperation op = iterator.next();
-        if (op.getTickToFireAt() == currentTick) {
-          for (IOperation co : currentOps) {
-            if (co.getElementId().equals(op.getElementId()) && op.getClass() == co.getClass()) {
+      for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
+        Motion m = iterator.next();
+        if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
+          for (Motion cm : currentMotions) {
+            if (cm.getElementId().equals(m.getElementId())
+                    && m.motionType().equals(cm.motionType())) {
               throw new IllegalArgumentException("Cannot have two motions overlap");
             }
           }
-          currentOps.add(op);
-          op.fire();
+          currentMotions.add(m);
+        }
+        m.fire(currentTick);
+        if (m.getEndTick() == currentTick - 1) {
           iterator.remove();
         }
       }
-      currentOps.clear();
+      currentMotions.clear();
+      currentTick++;
     }
   }
 
   @Override
-  public void sortOperations() {
-    Collections.sort(this.operations, Comparator.comparingInt(IOperation::getTickToFireAt));
-  }
-
-  @Override
   public void executeOneTick() {
-    List<IOperation> currentOps = new ArrayList<>();
-    for (Iterator<IOperation> iterator = operations.iterator(); iterator.hasNext();) {
-      IOperation op = iterator.next();
-      if (op.getTickToFireAt() == currentTick) {
-        for (IOperation co : currentOps) {
-          if (co.getElementId().equals(op.getElementId()) && op.getClass() == co.getClass()) {
+    List<Motion> currentMotions = new ArrayList<>();
+    for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
+      Motion m = iterator.next();
+      if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
+        for (Motion cm : currentMotions) {
+          if (cm.getElementId().equals(m.getElementId())
+                  && m.motionType().equals(cm.motionType())) {
             throw new IllegalArgumentException("Cannot have two motions overlap");
           }
         }
-        currentOps.add(op);
-        op.fire();
-        iterator.remove();
+        currentMotions.add(m);
       }
-      else if (op.getTickToFireAt() > currentTick) {
-        break;
-      }
+      m.fire(currentTick);
     }
     currentTick++;
   }
@@ -324,6 +320,11 @@ public class AnimationModel implements IAnimation {
   @Override
   public int getY() {
     return topY;
+  }
+
+  @Override
+  public void resetAnimation() {
+    this.currentTick = 0;
   }
 
   /**

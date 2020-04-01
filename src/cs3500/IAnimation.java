@@ -58,4 +58,9 @@ public interface IAnimation extends ReadOnlyAnimation {
    * @param tick tick at which to stop executing
    */
   void executeOperationsUntil(int tick);
+
+  /**
+   * Resets the animation.
+   */
+  void resetAnimation();
 }
