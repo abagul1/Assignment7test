@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Scrollable;
 
+import cs3500.IController;
 import cs3500.IView;
 import cs3500.ReadOnlyAnimation;
 
@@ -16,7 +17,7 @@ import cs3500.ReadOnlyAnimation;
 /**
  * Parent class for visual views and their respective decorator classes.
  */
-public class VisualView extends JFrame implements IView, Scrollable {
+public class VisualView extends JFrame implements IView {
   private ReadOnlyAnimation m;
 
   /**
@@ -32,7 +33,6 @@ public class VisualView extends JFrame implements IView, Scrollable {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.m = m;
-    m.sortOperations();
 
     AnimationPanel animationPanel = new AnimationPanel(m);
     this.setTitle("Animation Station");
@@ -58,6 +58,11 @@ public class VisualView extends JFrame implements IView, Scrollable {
   }
 
   @Override
+  public void addClickListener(IController listener) {
+    throw new UnsupportedOperationException("visual view doesn't use addClickListener");
+  }
+
+  @Override
   public void execute() {
     this.refresh();
     m.executeOneTick();
@@ -68,28 +73,4 @@ public class VisualView extends JFrame implements IView, Scrollable {
     return new Dimension(m.getWidth(), m.getHeight());
   }
 
-  @Override
-  public Dimension getPreferredScrollableViewportSize() {
-    return getPreferredSize();
-  }
-
-  @Override
-  public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-    return 20;
-  }
-
-  @Override
-  public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-    return 5;
-  }
-
-  @Override
-  public boolean getScrollableTracksViewportWidth() {
-    return false;
-  }
-
-  @Override
-  public boolean getScrollableTracksViewportHeight() {
-    return false;
-  }
 }

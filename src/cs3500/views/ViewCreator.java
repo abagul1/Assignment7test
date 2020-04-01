@@ -2,11 +2,13 @@ package cs3500.views;
 
 import java.util.Objects;
 
+import cs3500.IAnimation;
 import cs3500.IView;
 import cs3500.ReadOnlyAnimation;
 import cs3500.views.svgview.SVGView;
 import cs3500.views.textview.TextView;
 import cs3500.views.textview.TextViewSysOut;
+import cs3500.views.visualview.CompositeView;
 import cs3500.views.visualview.VisualView;
 
 /**
@@ -21,7 +23,7 @@ public class ViewCreator {
    * @param out output file
    * @return a view
    */
-  public static IView create(String vt, ReadOnlyAnimation a, String out, int speed) {
+  public static IView create(String vt, IAnimation a, String out, int speed) {
     Objects.requireNonNull(vt, "Must have non-null view type");
     if (speed < 1) {
       throw new IllegalArgumentException("Speed must be at least 1");
@@ -39,6 +41,8 @@ public class ViewCreator {
         return new SVGView(a, out, speed);
       case "visual":
         return new VisualView(a);
+      case "composite":
+        return new CompositeView(a);
       default:
         throw new IllegalArgumentException("Invalid view type");
     }
