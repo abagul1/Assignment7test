@@ -1,16 +1,11 @@
 package cs3500.views.visualview;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 import cs3500.IAnimation;
 import cs3500.IController;
@@ -35,23 +30,38 @@ public class CompositeView extends JFrame implements IView {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.m = m;
-    AnimationPanel animationPanel = new AnimationPanel(m);
+    AnimationPanel animationPanel = new AnimationPanel(m); //Bottom Panel
+    JPanel aniPane = new JPanel();
+    JPanel buttonPane = new JPanel(); //Top panel
+
+    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPane, aniPane); //Split pane
+    this.setPreferredSize(getPreferredSize());
+    getContentPane().setLayout(new GridLayout());
+    getContentPane().add(splitPane);
+
+    aniPane.add(animationPanel);
+
+    splitPane.setDividerLocation(50);
+
+    JScrollPane scrollPane = new JScrollPane(animationPanel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(m.getWidth(), m.getHeight()));
+    aniPane.add(scrollPane);
+    this.add(splitPane);
+
     p = true;
     start = new JButton("Start");
     pause = new JButton("Pause");
     restart = new JButton("Restart");
-    animationPanel.add(start);
-    animationPanel.add(pause);
-    animationPanel.add(restart);
+    buttonPane.add(start);
+    buttonPane.add(pause);
+    buttonPane.add(restart);
     this.setTitle("Animation Station");
-    this.setSize(m.getWidth(), m.getHeight());
+    this.setSize(m.getWidth(), m.getHeight() + 100);
     this.setLocationRelativeTo(null);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    JScrollPane scrollPane = new JScrollPane(animationPanel,
-            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(600, 600));
-    this.add(scrollPane);
+
   }
 
   @Override
