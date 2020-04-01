@@ -9,6 +9,8 @@ import cs3500.IView;
 public class AnimationController implements IController {
   IView view;
   IAnimation a;
+  Timer t;
+  int speed;
 
   public AnimationController(IView v) {
     this.view = v;
@@ -17,12 +19,13 @@ public class AnimationController implements IController {
   @Override
   public void playAnimation(IAnimation a, String viewType, int tempo) {
     this.a = a;
+    this.speed = tempo;
     if (viewType.equals("composite")) {
       view.addClickListener(this);
     }
     view.makeVisible();
     if (viewType.equals("visual") || viewType.equals("composite")) {
-      Timer t = new Timer(1000 / tempo, e -> view.execute());
+      t = new Timer(1000 / speed, e -> view.execute());
       t.start();
       t.setRepeats(true);
     }
@@ -33,6 +36,20 @@ public class AnimationController implements IController {
 
   @Override
   public void handleButtonClick(int x, int y) {
+
+  }
+
+  @Override
+  public void changeSpeed(String type) {
+    if (type.equals("+")) {
+      t.setDelay(1000 / speed++);
+    }
+    else {
+      if (speed > 1) {
+        t.setDelay(1000 / speed--);
+      }
+    }
+
 
   }
 }

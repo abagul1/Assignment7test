@@ -20,6 +20,9 @@ public class CompositeView extends JFrame implements IView {
   private JButton start;
   private JButton pause;
   private JButton restart;
+  private JButton plus;
+  private JButton minus;
+  private JButton looping;
 
   public CompositeView(IAnimation m) {
     super();
@@ -54,9 +57,15 @@ public class CompositeView extends JFrame implements IView {
     start = new JButton("Start");
     pause = new JButton("Pause");
     restart = new JButton("Restart");
+    plus = new JButton("IncSpeed");
+    minus = new JButton("DecSpeed");
+    looping = new JButton("loop");
     buttonPane.add(start);
     buttonPane.add(pause);
     buttonPane.add(restart);
+    buttonPane.add(looping);
+    buttonPane.add(plus);
+    buttonPane.add(minus);
     this.setTitle("Animation Station");
     this.setSize(m.getWidth(), m.getHeight() + 100);
     this.setLocationRelativeTo(null);
@@ -80,15 +89,23 @@ public class CompositeView extends JFrame implements IView {
       @Override
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-        if (e.getSource() == pause) {
+        if (e.getSource() == pause && !p) {
           p = true;
         }
-        if (e.getSource() == start) {
+        else if (e.getSource() == start) {
           p = false;
         }
-        if (e.getSource() == restart) {
+        else if (e.getSource() == restart) {
           m.resetAnimation();
-
+        }
+        else if (e.getSource() == plus) {
+          listener.changeSpeed("+");
+        }
+        else if (e.getSource() == minus) {
+          listener.changeSpeed("-");
+        }
+        else if (e.getSource() == looping) {
+          //Todo: implement looping
         }
         listener.handleButtonClick(x, y);
       }
@@ -96,6 +113,9 @@ public class CompositeView extends JFrame implements IView {
     pause.addMouseListener(ml);
     start.addMouseListener(ml);
     restart.addMouseListener(ml);
+    plus.addMouseListener(ml);
+    minus.addMouseListener(ml);
+    looping.addMouseListener(ml);
   }
 
   @Override
