@@ -17,8 +17,11 @@ public class AnimationController implements IController {
   @Override
   public void playAnimation(IAnimation a, String viewType, int tempo) {
     this.a = a;
-
-    if (viewType.equals("visual")) {
+    if (viewType.equals("composite")) {
+      view.addClickListener(this);
+    }
+    view.makeVisible();
+    if (viewType.equals("visual") || viewType.equals("composite")) {
       Timer t = new Timer(1000 / tempo, e -> view.execute());
       t.start();
       t.setRepeats(true);
