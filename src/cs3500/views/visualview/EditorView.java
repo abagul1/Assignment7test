@@ -1,18 +1,25 @@
 package cs3500.views.visualview;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.ScrollPaneConstants;
 
 import cs3500.IAnimation;
 import cs3500.IController;
 import cs3500.IView;
 
 
-public class CompositeView extends JFrame implements IView {
+public class EditorView extends JFrame implements IView {
   private IAnimation m;
   private int x;
   private int y;
@@ -24,7 +31,7 @@ public class CompositeView extends JFrame implements IView {
   private JButton minus;
   private JButton looping;
 
-  public CompositeView(IAnimation m) {
+  public EditorView(IAnimation m) {
     super();
 
     if (m == null) {
@@ -41,11 +48,8 @@ public class CompositeView extends JFrame implements IView {
     this.setPreferredSize(getPreferredSize());
     getContentPane().setLayout(new GridLayout());
     getContentPane().add(splitPane);
-
     aniPane.add(animationPanel);
-
     splitPane.setDividerLocation(50);
-
     JScrollPane scrollPane = new JScrollPane(animationPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -67,10 +71,9 @@ public class CompositeView extends JFrame implements IView {
     buttonPane.add(plus);
     buttonPane.add(minus);
     this.setTitle("Animation Station");
-    this.setSize(m.getWidth(), m.getHeight() + 100);
+    this.setSize(m.getWidth(), m.getHeight());
     this.setLocationRelativeTo(null);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
   }
 
   @Override
@@ -120,7 +123,7 @@ public class CompositeView extends JFrame implements IView {
 
   @Override
   public void execute() {
-    if (p == false) {
+    if (!p) {
       this.refresh();
       m.executeOneTick();
     }

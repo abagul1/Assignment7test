@@ -20,11 +20,11 @@ public class AnimationController implements IController {
   public void playAnimation(IAnimation a, String viewType, int tempo) {
     this.a = a;
     this.speed = tempo;
-    if (viewType.equals("composite")) {
+    if (viewType.equals("edit")) {
       view.addClickListener(this);
     }
     view.makeVisible();
-    if (viewType.equals("visual") || viewType.equals("composite")) {
+    if (viewType.equals("visual") || viewType.equals("edit")) {
       t = new Timer(1000 / speed, e -> view.execute());
       t.start();
       t.setRepeats(true);

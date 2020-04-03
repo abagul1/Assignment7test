@@ -74,20 +74,27 @@ public class Motion {
    */
   public void fire(int currentTick) {
     if (currentTick >= t1 && currentTick <= t2) {
-      int x = (x1 * (t2 - currentTick) / (t2 - t1)) + (x2 * (currentTick - t1) / (t2 - t1));
-      int y = (y1 * (t2 - currentTick) / (t2 - t1)) + (y2 * (currentTick - t1) / (t2 - t1));
-      int w = (w1 * (t2 - currentTick) / (t2 - t1)) + (w2 * (currentTick - t1) / (t2 - t1));
-      int h = (h1 * (t2 - currentTick) / (t2 - t1)) + (h2 * (currentTick - t1) / (t2 - t1));
-      int r = (r1 * (t2 - currentTick) / (t2 - t1)) + (r2 * (currentTick - t1) / (t2 - t1));
-      int g = (g1 * (t2 - currentTick) / (t2 - t1)) + (g2 * (currentTick - t1) / (t2 - t1));
-      int b = (b1 * (t2 - currentTick) / (t2 - t1)) + (b2 * (currentTick - t1) / (t2 - t1));
+      double x = (double) (x1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (x2 * (currentTick - t1) / (t2 - t1));
+      double y = (double)(y1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (y2 * (currentTick - t1) / (t2 - t1));
+      double w = (double)(w1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (w2 * (currentTick - t1) / (t2 - t1));
+      double h = (double)(h1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (h2 * (currentTick - t1) / (t2 - t1));
+      double r = (double)(r1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (r2 * (currentTick - t1) / (t2 - t1));
+      double g = (double)(g1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (g2 * (currentTick - t1) / (t2 - t1));
+      double b = (double)(b1 * (t2 - currentTick) / (t2 - t1))
+              + (double) (b2 * (currentTick - t1) / (t2 - t1));
 
       this.element.setPosn(new Posn(x, y));
       this.element.setHeight(h);
       this.element.setWidth(w);
-      int newRed = r;
-      int newGreen = g;
-      int newBlue = b;
+      int newRed = (int) r;
+      int newGreen = (int) g;
+      int newBlue = (int) b;
 
       if (newRed > 255) {
         newRed = 255;
