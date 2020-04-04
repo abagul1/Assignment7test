@@ -65,7 +65,6 @@ public class VisualView extends JFrame implements IView {
   @Override
   public void execute() {
     this.refresh();
-    m.executeOneTick();
   }
 
   @Override

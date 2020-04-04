@@ -12,8 +12,11 @@ public class AnimationController implements IController {
   Timer t;
   int speed;
 
+  boolean paused;
+
   public AnimationController(IView v) {
     this.view = v;
+    this.paused = true;
   }
 
   @Override
@@ -25,12 +28,19 @@ public class AnimationController implements IController {
     }
     view.makeVisible();
     if (viewType.equals("visual") || viewType.equals("edit")) {
-      t = new Timer(1000 / speed, e -> view.execute());
+      t = new Timer(1000 / speed, e -> execute());
       t.start();
       t.setRepeats(true);
     }
     else {
+      execute();
+    }
+  }
+
+  private void execute() {
+    if (!paused) {
       view.execute();
+      a.executeOneTick();
     }
   }
 
@@ -49,7 +59,15 @@ public class AnimationController implements IController {
         t.setDelay(1000 / speed--);
       }
     }
+  }
 
+  @Override
+  public boolean getPaused() {
+    return paused;
+  }
 
+  @Override
+  public void setPaused() {
+    paused = !paused;
   }
 }

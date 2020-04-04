@@ -92,14 +92,20 @@ public class EditorView extends JFrame implements IView {
       @Override
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-        if (e.getSource() == pause && !p) {
-          p = true;
+        if (e.getSource() == pause && !listener.getPaused()) {
+          listener.setPaused();
         }
         else if (e.getSource() == start) {
-          p = false;
+          if (listener.getPaused()) {
+            listener.setPaused();
+          }
         }
         else if (e.getSource() == restart) {
           m.resetAnimation();
+          refresh();
+          if (!listener.getPaused()) {
+            listener.setPaused();
+          }
         }
         else if (e.getSource() == plus) {
           listener.changeSpeed("+");
@@ -123,10 +129,7 @@ public class EditorView extends JFrame implements IView {
 
   @Override
   public void execute() {
-    if (!p) {
-      this.refresh();
-      m.executeOneTick();
-    }
+    this.refresh();
   }
 
   @Override

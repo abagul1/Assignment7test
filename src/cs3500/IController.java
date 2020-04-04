@@ -8,4 +8,8 @@ public interface IController {
 
   void changeSpeed(String type);
 
+  boolean getPaused();
+
+  void setPaused();
+
 }
