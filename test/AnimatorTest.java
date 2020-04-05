@@ -130,16 +130,6 @@ public class AnimatorTest {
     am.executeOperations();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testSimultaneousMoveWithExecuteUntil() {
-    am = new AnimationModel(0, 0, 500, 500);
-    am.insertElement("R", "rectangle");
-    am.motion("R", 1, 50, 50, 5, 10, 0, 255,0,
-            5, 60, 30, 10 ,20, 255, 0, 0);
-    am.motion("R", 1, 50, 50, 5, 10, 0, 255,0,
-            5, 60, 30, 10 ,20, 255, 0, 0);
-    am.executeOperationsUntil(6);
-  }
 
   @Test
   public void testMove2() {
