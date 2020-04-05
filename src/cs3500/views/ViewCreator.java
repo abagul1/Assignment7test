@@ -7,7 +7,7 @@ import cs3500.IView;
 import cs3500.views.svgview.SVGView;
 import cs3500.views.textview.TextView;
 import cs3500.views.textview.TextViewSysOut;
-import cs3500.views.visualview.EditorView;
+import cs3500.views.visualview.EnhancedVisualView;
 import cs3500.views.visualview.VisualView;
 
 /**
@@ -41,7 +41,7 @@ public class ViewCreator {
       case "visual":
         return new VisualView(a);
       case "edit":
-        return new EditorView(a);
+        return new EnhancedVisualView(a);
       default:
         throw new IllegalArgumentException("Invalid view type");
     }

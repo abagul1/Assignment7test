@@ -19,7 +19,7 @@ import cs3500.IController;
 import cs3500.IView;
 
 
-public class EditorView extends JFrame implements IView {
+public class EnhancedVisualView extends JFrame implements IView {
   private IAnimation m;
   private int x;
   private int y;
@@ -30,8 +30,10 @@ public class EditorView extends JFrame implements IView {
   private JButton plus;
   private JButton minus;
   private JButton looping;
+  private JButton edit;
+  EditorPanel editPanel;
 
-  public EditorView(IAnimation m) {
+  public EnhancedVisualView(IAnimation m) {
     super();
 
     if (m == null) {
@@ -40,17 +42,17 @@ public class EditorView extends JFrame implements IView {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.m = m;
-    AnimationPanel animationPanel = new AnimationPanel(m); //Bottom Panel
-    JPanel aniPane = new JPanel();
+    editPanel = new EditorPanel(m);
+    JPanel aniPane = new JPanel(); //Bottom Panel
     JPanel buttonPane = new JPanel(); //Top panel
 
     JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPane, aniPane); //Split pane
     this.setPreferredSize(getPreferredSize());
     getContentPane().setLayout(new GridLayout());
     getContentPane().add(splitPane);
-    aniPane.add(animationPanel);
+    aniPane.add(editPanel);
     splitPane.setDividerLocation(50);
-    JScrollPane scrollPane = new JScrollPane(animationPanel,
+    JScrollPane scrollPane = new JScrollPane(editPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setPreferredSize(new Dimension(m.getWidth(), m.getHeight()));
@@ -63,13 +65,15 @@ public class EditorView extends JFrame implements IView {
     restart = new JButton("Restart");
     plus = new JButton("IncSpeed");
     minus = new JButton("DecSpeed");
-    looping = new JButton("loop");
+    looping = new JButton("Loop");
+    edit = new JButton("Edit");
     buttonPane.add(start);
     buttonPane.add(pause);
     buttonPane.add(restart);
     buttonPane.add(looping);
     buttonPane.add(plus);
     buttonPane.add(minus);
+    buttonPane.add(edit);
     this.setTitle("Animation Station");
     this.setSize(m.getWidth(), m.getHeight());
     this.setLocationRelativeTo(null);
@@ -99,6 +103,7 @@ public class EditorView extends JFrame implements IView {
           if (listener.getPaused()) {
             listener.setPaused();
           }
+          editPanel.setWindow(WindowType.ANIMATION);
         }
         else if (e.getSource() == restart) {
           m.resetAnimation();
@@ -106,6 +111,7 @@ public class EditorView extends JFrame implements IView {
           if (!listener.getPaused()) {
             listener.setPaused();
           }
+          editPanel.setWindow(WindowType.ANIMATION);
         }
         else if (e.getSource() == plus) {
           listener.changeSpeed("+");
@@ -116,6 +122,11 @@ public class EditorView extends JFrame implements IView {
         else if (e.getSource() == looping) {
           //Todo: implement looping
         }
+        else if (e.getSource() == edit) {
+          p = true;
+          editPanel.setWindow(WindowType.SHAPEMENU);
+          refresh();
+        }
         listener.handleButtonClick(x, y);
       }
     };
@@ -125,6 +136,7 @@ public class EditorView extends JFrame implements IView {
     plus.addMouseListener(ml);
     minus.addMouseListener(ml);
     looping.addMouseListener(ml);
+    edit.addMouseListener(ml);
   }
 
   @Override
