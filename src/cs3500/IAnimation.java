@@ -1,5 +1,7 @@
 package cs3500;
 
+import cs3500.motions.Motion;
+
 /**
  * Interface for an Animation model within an M-V-C framework.
  * An animation consists of a collection of visual elements, where at least one element has its
@@ -63,4 +65,11 @@ public interface IAnimation extends ReadOnlyAnimation {
    * Resets the animation.
    */
   void resetAnimation();
+
+  void insertKeyFrame(String name, int tick, Motion m);
+
+  void deleteKeyFrame(String name, int tick);
+
+  void editKeyFrame(String name, int tick, Motion m);
+
 }

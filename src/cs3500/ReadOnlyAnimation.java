@@ -3,6 +3,8 @@ package cs3500;
 import java.util.List;
 import java.util.Map;
 
+import cs3500.motions.Motion;
+
 /**
  * Provides an interface with read only methods.
  */
@@ -64,5 +66,17 @@ public interface ReadOnlyAnimation {
    */
   void executeOneTick();
 
+  /**
+   * Gets all the shapes in the animation.
+   * @return array of shape names
+   */
+  String[] getShapes();
+
+  /**
+   * Gets a list of key frames associated with the given shape.
+   * @param id id of shape
+   * @return a list of key frames
+   */
+  List<Motion> getKeyFrame(String id);
 
 }

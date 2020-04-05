@@ -25,6 +25,7 @@ public class AnimationModel implements IAnimation {
   private List<Motion> motions;
   private Map<String, List<String>> verboseOps;
   private Map<String, String> declaredShapes;
+  private Map<String, List<Motion>> keyframes;
 
   private int currentTick;
 
@@ -42,6 +43,7 @@ public class AnimationModel implements IAnimation {
     elements = new LinkedHashMap<>();
     verboseOps = new LinkedHashMap<>();
     declaredShapes = new LinkedHashMap<>();
+    keyframes = new LinkedHashMap<>();
     motions = new ArrayList<>();
     currentTick = 0;
     windowWidth = width;
@@ -56,22 +58,13 @@ public class AnimationModel implements IAnimation {
                      int t2, int x2, int y2, int w2, int h2, int r2, int g2, int b2) {
 
     this.checkNotNull();
-
-    double tickDiff = t2 - t1;
-    double dx = (x2 - x1) / tickDiff;
-    double dy = (y2 - y1) / tickDiff;
-    double dw = (w2 - w1) / tickDiff;
-    double dh = (h2 - h1) / tickDiff;
-    double dr = (r2 - r1) / tickDiff;
-    double dg = (g2 - g1) / tickDiff;
-    double db = (b2 - b1) / tickDiff;
-
     if (!elements.containsKey(name)) {
       try {
         switch (declaredShapes.get(name)) {
           case "rectangle":
             elements.put(name, new Rectangle(name, new Color(r1, g1, b1, 0), new Posn(x1, y1),
                     h1, w1));
+            //TODO: alpha doesnt reset when animation is reset, i.e. buildings star problem
             break;
           case "ellipse":
             elements.put(name, new Ellipse(name, new Color(r1, g1, b1,0), new Posn(x1, y1), h1,
@@ -85,12 +78,39 @@ public class AnimationModel implements IAnimation {
         throw new IllegalArgumentException("Element id doesn't exist");
       }
     }
-    if (t1 < t2) {
-      motions.add(new Motion(elements.get(name), t1, x1, y1, w1, h1, r1,
-              g1, b1, t2, x2, y2, w2, h2, r2, g2, b2));
-    }
+    this.setKeyframes(name, t2, x2, y2, w2, h2, r2, g2, b2);
     this.addVerboseMotion(name, t1, x1, y1, w1, h1, r1, g1, b1, t2, x2, y2, w2, h2, r2, g2, b2);
   }
+
+  /**
+   * Adds a keyframe to the map of key frames.
+   * @param name name of shape
+   * @param t ending tick
+   * @param x ending x position
+   * @param y ending y position
+   * @param w ending width
+   * @param h ending height
+   * @param r ending red
+   * @param g ending green
+   * @param b ending blue
+   */
+  private void setKeyframes(String name, int t, int x, int y, int w, int h,
+                           int r, int g, int b) {
+    if (!keyframes.containsKey(name)) {
+      keyframes.put(name, new ArrayList<>());
+    }
+
+    int listSize = keyframes.get(name).size();
+    if (listSize > 0) {
+      keyframes.get(name).add(new Motion(elements.get(name), keyframes.get(name).get(listSize - 1),
+              t, x, y, w, h, r, g, b));
+      keyframes.get(name).get(listSize - 1).setNextMotion(keyframes.get(name).get(listSize));
+    } else {
+      keyframes.get(name).add(new Motion(elements.get(name), null,
+              t, x, y, w, h, r, g, b));
+    }
+  }
+
 
   /**
    * Adds a verbose description of the motion.
@@ -212,50 +232,61 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void executeOperations() {
-    List<Motion> currentMotions = new ArrayList<>();
-    while (!motions.isEmpty()) {
-      for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
-        Motion m = iterator.next();
-        if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
-          for (Motion cm : currentMotions) {
-            if (cm.getElementId().equals(m.getElementId())
-                    && m.motionType().equals(cm.motionType())) {
-              throw new IllegalArgumentException("Cannot have two motions overlap");
-            }
+    while (checkDone()) {
+      for (String key : keyframes.keySet()) {
+        for (Iterator<Motion> iterator = keyframes.get(key).iterator(); iterator.hasNext(); ) {
+          Motion m = iterator.next();
+          if (m.getPrevMotion() == null) {
+            m.fire(currentTick);
           }
-          currentMotions.add(m);
-        }
-        m.fire(currentTick);
-        if (m.getEndTick() == currentTick - 1) {
-          iterator.remove();
+          else if (m.getPrevMotion().getParams()[0] <= currentTick
+                  && m.getParams()[0] >= currentTick) {
+            if (m.getPrevMotion().getParams()[0] == m.getParams()[0]) {
+              throw new IllegalArgumentException("Cannot have two keyframes overlap");
+            }
+            m.fire(currentTick);
+          }
+          if (m.getParams()[0] == currentTick - 1) {
+            iterator.remove();
+          }
         }
       }
-      currentMotions.clear();
       currentTick++;
     }
+  }
+
+  private boolean checkDone() {
+    for (String key : keyframes.keySet()) {
+      if (!keyframes.get(key).isEmpty()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
   public void executeOperationsUntil(int tick) {
     List<Motion> currentMotions = new ArrayList<>();
     for (currentTick = 0; currentTick < tick; currentTick++) {
-      if (motions.isEmpty()) {
+      if (!this.checkDone()) {
         break;
       }
-      for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
-        Motion m = iterator.next();
-        if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
-          for (Motion cm : currentMotions) {
-            if (cm.getElementId().equals(m.getElementId())
-                    && m.motionType().equals(cm.motionType())) {
-              throw new IllegalArgumentException("Cannot have two motions overlap");
-            }
+      for (String key : keyframes.keySet()) {
+        for (Iterator<Motion> iterator = keyframes.get(key).iterator(); iterator.hasNext(); ) {
+          Motion m = iterator.next();
+          if (m.getPrevMotion() == null) {
+            m.fire(currentTick);
           }
-          currentMotions.add(m);
-        }
-        m.fire(currentTick);
-        if (m.getEndTick() == currentTick - 1) {
-          iterator.remove();
+          else if (m.getPrevMotion().getParams()[0] <= currentTick
+                  && m.getParams()[0] >= currentTick) {
+            if (m.getPrevMotion().getParams()[0] == m.getParams()[0]) {
+              throw new IllegalArgumentException("Cannot have two keyframes overlap");
+            }
+            m.fire(currentTick);
+          }
+          if (m.getParams()[0] == currentTick) {
+            iterator.remove();
+          }
         }
       }
       currentMotions.clear();
@@ -265,21 +296,38 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void executeOneTick() {
-    List<Motion> currentMotions = new ArrayList<>();
-    for (Iterator<Motion> iterator = motions.iterator(); iterator.hasNext();) {
-      Motion m = iterator.next();
-      if (m.getStartTick() <= currentTick && m.getEndTick() > currentTick) {
-        for (Motion cm : currentMotions) {
-          if (cm.getElementId().equals(m.getElementId())
-                  && m.motionType().equals(cm.motionType())) {
-            throw new IllegalArgumentException("Cannot have two motions overlap");
-          }
+    for (String key : keyframes.keySet()) {
+      for (Iterator<Motion> iterator = keyframes.get(key).iterator(); iterator.hasNext(); ) {
+        Motion m = iterator.next();
+        if (m.getPrevMotion() == null) {
+          m.fire(currentTick);
         }
-        currentMotions.add(m);
+        else if (m.getPrevMotion().getParams()[0] <= currentTick
+                && m.getParams()[0] >= currentTick) {
+          if (m.getPrevMotion().getParams()[0] == m.getParams()[0]) {
+            throw new IllegalArgumentException("Cannot have two keyframes overlap");
+          }
+          m.fire(currentTick);
+        }
       }
-      m.fire(currentTick);
     }
     currentTick++;
+  }
+
+  @Override
+  public String[] getShapes() {
+    String[] str = new String[declaredShapes.size()];
+    int i = 0;
+    for (String key : declaredShapes.keySet()) {
+      str[i] = key;
+      i++;
+    }
+    return str;
+  }
+
+  @Override
+  public List<Motion> getKeyFrame(String id) {
+    return null;
   }
 
 
@@ -325,6 +373,74 @@ public class AnimationModel implements IAnimation {
   @Override
   public void resetAnimation() {
     this.currentTick = 0;
+  }
+
+  @Override
+  public void insertKeyFrame(String name, int tick, Motion m) {
+    for (int i = 0; i < keyframes.get(name).size(); i++) {
+      if (keyframes.get(name).isEmpty()) {
+        keyframes.get(name).add(m);
+        break;
+      }
+      else if (keyframes.get(name).get(keyframes.get(name).size() - 1).getParams()[0] < tick) {
+        m.setPrevMotion(keyframes.get(name).get(keyframes.get(name).size() - 1));
+        keyframes.get(name).get(keyframes.get(name).size() - 1).setNextMotion(m);
+        keyframes.get(name).add(m);
+        break;
+      }
+      else if (keyframes.get(name).get(i).getParams()[0] > tick) {
+        if (keyframes.get(name).get(i).getPrevMotion() == null) {
+          keyframes.get(name).get(i).setPrevMotion(m);
+          m.setNextMotion(keyframes.get(name).get(i));
+          //todo: could run into circular issues here
+          keyframes.get(name).add(i, m);
+          break;
+        }
+        else {
+          keyframes.get(name).get(i).setPrevMotion(m);
+          keyframes.get(name).get(i - 1).setNextMotion(m);
+          m.setPrevMotion( keyframes.get(name).get(i - 1));
+          m.setNextMotion(keyframes.get(name).get(i));
+          keyframes.get(name).add(i, m);
+        }
+        break;
+      }
+    }
+  }
+
+  @Override
+  public void deleteKeyFrame(String name, int tick) {
+    for (Motion m : keyframes.get(name)) {
+      if (m.getParams()[0] == tick) {
+        if (m.getPrevMotion() == null && m.getNextMotion() == null) {
+          keyframes.get(name).remove(m);
+        }
+        else if (m.getPrevMotion() == null) {
+          m.getNextMotion().setPrevMotion(null);
+          keyframes.get(name).remove(m);
+        }
+        else if (m.getNextMotion() == null) {
+          m.getPrevMotion().setNextMotion(null);
+          keyframes.get(name).remove(m);
+        }
+        else {
+          m.getNextMotion().setPrevMotion(m.getPrevMotion());
+          m.getPrevMotion().setNextMotion(m.getNextMotion());
+          keyframes.get(name).remove(m);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void editKeyFrame(String name, int tick, Motion m) {
+    for (Motion motions : keyframes.get(name)) {
+      if (motions.getParams()[0] == tick) {
+        m.setNextMotion(motions.getNextMotion());
+        m.setPrevMotion(motions.getPrevMotion());
+        keyframes.get(name).set(keyframes.get(name).indexOf(motions), m);
+      }
+    }
   }
 
   /**
