@@ -9,6 +9,7 @@ import cs3500.IElement;
 import cs3500.elements.Posn;
 import cs3500.elements.Ellipse;
 import cs3500.elements.Rectangle;
+import cs3500.motions.Motion;
 
 /**
  * Test class for animator model.
@@ -176,4 +177,54 @@ public class AnimatorTest {
     assertEquals(65, am.getElement("R").getDimensions()[0], 0.001);
     assertEquals(12, am.getElement("R").getDimensions()[1], 0.001);
   }
+
+  @Test
+  public void testInsertKeyFrame() {
+    am = new AnimationModel(0, 0, 500, 500);
+    am.insertElement("R", "rectangle");
+    am.motion("R", 5, 200, 200, 50, 100, 255, 0 ,0,
+            10, 200, 200, 54 ,246, 255, 0, 0);
+    Motion m = new Motion(r1, null, 2, 100, 100,
+            75, 89, 255, 0 ,0);
+    am.insertKeyFrame("R", m.getParams()[0], m);
+    assertEquals(am.getKeyFrame("R").get(0), m);
+    Motion m2 = new Motion(r1, null, 11, 100, 100,
+            75, 89, 255, 0 ,0);
+    am.insertKeyFrame("R", m2.getParams()[0], m2);
+    assertEquals(11, am.getKeyFrame("R").get(2).getParams()[0]);
+  }
+
+  @Test
+  public void testDeleteKeyFrame() {
+    am = new AnimationModel(0, 0, 500, 500);
+    am.insertElement("R", "rectangle");
+    am.motion("R", 5, 200, 200, 50, 100, 255, 0 ,0,
+            10, 200, 200, 54 ,246, 255, 0, 0);
+    Motion m = new Motion(r1, null, 2, 100, 100,
+            75, 89, 255, 0 ,0);
+    am.insertKeyFrame("R", m.getParams()[0], m);
+    Motion m2 = new Motion(r1, null, 11, 100, 100,
+            75, 89, 255, 0 ,0);
+    am.insertKeyFrame("R", m2.getParams()[0], m2);
+    am.deleteKeyFrame("R", 10);
+    assertEquals(11, am.getKeyFrame("R").get(1).getParams()[0]);
+  }
+
+  @Test
+  public void modifyKeyFrame() {
+    am = new AnimationModel(0, 0, 500, 500);
+    am.insertElement("R", "rectangle");
+    am.motion("R", 5, 200, 200, 50, 100, 255, 0 ,0,
+            10, 200, 200, 54 ,246, 255, 0, 0);
+    Motion m = new Motion(r1, null, 2, 100, 100,
+            75, 89, 255, 0 ,0);
+    am.insertKeyFrame("R", m.getParams()[0], m);
+    Motion m2 = new Motion(r1, null, 10, 100, 100,
+            100, 67, 255, 0 ,0);
+    am.insertKeyFrame("R", m2.getParams()[0], m2);
+    am.editKeyFrame("R", 10, m2);
+    assertEquals(100, am.getKeyFrame("R").get(1).getParams()[3]);
+    assertEquals(67, am.getKeyFrame("R").get(1).getParams()[4]);
+  }
+
 }
