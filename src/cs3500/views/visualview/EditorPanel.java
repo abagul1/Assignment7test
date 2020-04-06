@@ -28,6 +28,7 @@ public class EditorPanel extends JPanel {
     this.wt = wt;
     switch (wt) {
       case ANIMATION:
+        this.removeAll();
         this.setAnimationWindow();
         break;
       case SHAPEMENU:
@@ -52,7 +53,7 @@ public class EditorPanel extends JPanel {
       @Override
       public void mouseClicked(MouseEvent e) {
         String data = "";
-        if (shapeList.getSelectedIndex() != -1) {
+        if (shapeList.getSelectedIndex() != -1 && e.getSource() == edit) {
           data = shapeList.getSelectedValue();
           List<Motion> keyFrames = rom.getKeyFrame(data);
           setKeyFramesWindow();
@@ -65,7 +66,7 @@ public class EditorPanel extends JPanel {
   }
 
   private void setAnimationWindow() {
-
+    this.setBackground(Color.WHITE);
   }
 
   private void setKeyFramesWindow() {
