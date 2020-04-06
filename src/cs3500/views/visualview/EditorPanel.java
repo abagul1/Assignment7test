@@ -56,7 +56,7 @@ public class EditorPanel extends JPanel {
         if (shapeList.getSelectedIndex() != -1 && e.getSource() == edit) {
           data = shapeList.getSelectedValue();
           List<Motion> keyFrames = rom.getKeyFrame(data);
-          setKeyFramesWindow();
+          setKeyFramesWindow(keyFrames);
         }
       }
     };
@@ -69,7 +69,61 @@ public class EditorPanel extends JPanel {
     this.setBackground(Color.WHITE);
   }
 
-  private void setKeyFramesWindow() {
+  private void setKeyFramesWindow(List<Motion> lm) {
+    this.removeAll();
+    this.setBackground(Color.WHITE);
+    String[] m = new String[lm.size()];
+    int i = 0;
+    for (Motion motion : lm) {
+      StringBuilder str = new StringBuilder();
+      str.append("T: ").append(motion.getParams()[0]).append(" ")
+              .append("X: ").append(motion.getParams()[1]).append(" ")
+              .append("Y: ").append(motion.getParams()[2]).append(" ")
+              .append("W: ").append(motion.getParams()[3]).append(" ")
+              .append("H: ").append(motion.getParams()[4]).append(" ")
+              .append("R: ").append(motion.getParams()[5]).append(" ")
+              .append("G: ").append(motion.getParams()[6]).append(" ")
+              .append("B: ").append(motion.getParams()[7]).append(" ");
+      m[i] = str.toString();
+      i++;
+    }
+    JList<String> keyFramesList = new JList(m);
+    keyFramesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    keyFramesList.setVisibleRowCount(8);
+    JScrollPane keyFrameScroll = new JScrollPane(keyFramesList,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JButton insert = new JButton("Insert");
+    JButton edit = new JButton("Edit");
+    JButton delete = new JButton("Delete");
+    MouseListener ml = new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        String data;
+        if (keyFramesList.getSelectedIndex() != -1 && e.getSource() == insert) {
+          insertKeyFrame();
+        }
+        else if (keyFramesList.getSelectedIndex() != -1 && e.getSource() == edit) {
+          data = keyFramesList.getSelectedValue();
+          editKeyFrame();
+        }
+      }
+    };
+    this.add(insert);
+    this.add(edit);
+    this.add(delete);
+    this.add(keyFrameScroll);
+  }
+
+  private void insertKeyFrame() {
+
+  }
+
+  private void editKeyFrame() {
+
+  }
+
+  private void deleteKeyFrame() {
 
   }
 
@@ -79,42 +133,9 @@ public class EditorPanel extends JPanel {
 
     Graphics2D g2d = (Graphics2D) g;
     g2d.translate(-rom.getX(), -rom.getY());
-
-    switch (wt) {
-      case ANIMATION:
-        this.animationWindow(g2d);
-        break;
-      case SHAPEMENU:
-        this.shapeWindow(g2d);
-        break;
-      case MOTIONMENU:
-        this.motionMenu(g2d);
-        break;
-      case EDITORMENU:
-        this.editorMenu(g2d);
-        break;
-      default:
-        throw new IllegalArgumentException("Window type doesn't exist");
-    }
-  }
-
-  private void animationWindow(Graphics2D g2d) {
-    this.setBackground(Color.WHITE);
     for (String key : rom.getElements().keySet()) {
       rom.getElement(key).paint(g2d);
     }
-  }
-
-  private void shapeWindow(Graphics2D g2d) {
-
-  }
-
-  private void motionMenu(Graphics2D g2d) {
-
-  }
-
-  private void editorMenu(Graphics2D g2d) {
-
   }
 
   @Override
