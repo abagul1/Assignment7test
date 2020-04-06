@@ -327,7 +327,7 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public List<Motion> getKeyFrame(String id) {
-    return null;
+    return keyframes.get(id);
   }
 
 
