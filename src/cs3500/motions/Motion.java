@@ -130,28 +130,6 @@ public class Motion {
   }
 
 
-  /**
-   * Gets the type of motion being performed on the element.
-   * @return type of motion
-   */
-  public String motionType() {
-    Color c1 = new Color(prevMotion.getParams()[5],
-            prevMotion.getParams()[6], prevMotion.getParams()[7]);
-    Color c2 = new Color(r, g, b);
-    if (prevMotion.getParams()[1] != x || prevMotion.getParams()[2]!= y) {
-      return "move";
-    }
-    else if (prevMotion.getParams()[4] != h || prevMotion.getParams()[3] != w) {
-        return "scale";
-    }
-    else if (c1 != c2) {
-      return "color";
-    }
-    else {
-      return "none";
-    }
-  }
-
   public int[] getParams() {
     return new int[] {t, x, y, w, h, r, g, b};
   }
