@@ -11,12 +11,15 @@ public class AnimationController implements IController {
   IAnimation a;
   Timer t;
   int speed;
-
+  int currentTick;
   boolean paused;
+  boolean loop;
 
   public AnimationController(IView v) {
     this.view = v;
     this.paused = true;
+    this.currentTick = 0;
+    this.loop = false;
   }
 
   @Override
@@ -39,8 +42,13 @@ public class AnimationController implements IController {
 
   private void execute() {
     if (!paused) {
+      if (a.isDone(currentTick) && loop) {
+        currentTick = 0;
+        a.resetAnimation();
+      }
       view.execute();
       a.executeOneTick();
+      currentTick++;
     }
   }
 
@@ -69,5 +77,15 @@ public class AnimationController implements IController {
   @Override
   public void setPaused() {
     paused = !paused;
+  }
+
+  @Override
+  public boolean getLoop() {
+    return loop;
+  }
+
+  @Override
+  public void setLoop() {
+    loop = !loop;
   }
 }
