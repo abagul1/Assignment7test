@@ -418,23 +418,25 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void deleteKeyFrame(String name, int tick) {
-    for (Motion m : keyframes.get(name)) {
+    Iterator<Motion> it = keyframes.get(name).iterator();
+    while (it.hasNext()) {
+      Motion m = it.next();
       if (m.getParams()[0] == tick) {
         if (m.getPrevMotion() == null && m.getNextMotion() == null) {
-          keyframes.get(name).remove(m);
+          it.remove();
         }
         else if (m.getPrevMotion() == null) {
           m.getNextMotion().setPrevMotion(null);
-          keyframes.get(name).remove(m);
+          it.remove();
         }
         else if (m.getNextMotion() == null) {
           m.getPrevMotion().setNextMotion(null);
-          keyframes.get(name).remove(m);
+          it.remove();
         }
         else {
           m.getNextMotion().setPrevMotion(m.getPrevMotion());
           m.getPrevMotion().setNextMotion(m.getNextMotion());
-          keyframes.get(name).remove(m);
+          it.remove();
         }
       }
     }
@@ -457,6 +459,7 @@ public class AnimationModel implements IAnimation {
       if (!keyframes.isEmpty()
               && keyframes.get(key).get(keyframes.get(key).size() - 1)
               .getParams()[0] > currentTick) {
+        //TODO: when list is empty throws out of bounds.
         return false;
       }
     }

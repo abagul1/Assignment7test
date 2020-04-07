@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import java.util.Scanner;
 
 
 import javax.swing.*;
@@ -188,7 +189,7 @@ public class EditorPanel extends JPanel {
   private void insertKeyFrame() {
     this.removeAll();
     this.setBackground(Color.WHITE);
-    this.drawTextFields();
+    this.drawInsertTextFields();
   }
 
   private void finalScreen(String message) {
@@ -199,11 +200,23 @@ public class EditorPanel extends JPanel {
   }
 
   private void editKeyFrame(String data) {
-
+    this.removeAll();
+    this.setBackground(Color.WHITE);
+    this.drawEditTextFields(data);
   }
 
   private void deleteKeyFrame(String data) {
-
+    String str = data.substring(3);
+    for (int i = 0; i < str.length(); i++) {
+      if (str.charAt(i) == 'X') {
+        str = str.substring(0, i - 1);
+        int tick = Integer.parseInt(str);
+        rom.deleteKeyFrame(selectedShape, tick);
+        break;
+      }
+    }
+    this.finalScreen("Keyframe is deleted, click start to go back to the animation,"
+            + "or edit to continue editing.");
   }
 
   @Override
@@ -222,7 +235,7 @@ public class EditorPanel extends JPanel {
     return new Dimension(rom.getWidth(), rom.getHeight());
   }
 
-  private void drawTextFields() {
+  private void drawInsertTextFields() {
     JPanel fieldPanel = new JPanel();
 
     JPanel tickPanel =new JPanel(new BorderLayout());
@@ -310,6 +323,122 @@ public class EditorPanel extends JPanel {
       }
     };
     insert.addMouseListener(ml);
+    this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+    this.add(fieldPanel, Component.CENTER_ALIGNMENT);
+    this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+  }
+
+  private void drawEditTextFields(String data) {
+    JPanel fieldPanel = new JPanel();
+    String str = data.substring(3);
+    Motion motionToEdit = null;
+    for (int i = 0; i < str.length(); i++) {
+      if (str.charAt(i) == 'X') {
+        str = str.substring(0, i - 1);
+        int tick = Integer.parseInt(str);
+        for (Motion m : rom.getKeyFrame(selectedShape)) {
+          if (m.getParams()[0] == tick) {
+            motionToEdit = m;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    JPanel tickPanel =new JPanel(new BorderLayout());
+    JTextField tick = new JTextField();
+    tick.setText(Integer.toString(motionToEdit.getParams()[0]));
+    tick.setColumns(4);
+    JLabel tickLabel = new JLabel("T: ");
+    tickPanel.add(tick, BorderLayout.CENTER);
+    tickPanel.add(tickLabel, BorderLayout.WEST);
+    fieldPanel.add(tickPanel);
+
+    JPanel xPanel =new JPanel(new BorderLayout());
+    JTextField xPos = new JTextField();
+    xPos.setText(Integer.toString(motionToEdit.getParams()[1]));
+    xPos.setColumns(4);
+    JLabel xPosLabel = new JLabel("X:");
+    xPanel.add(xPos, BorderLayout.CENTER);
+    xPanel.add(xPosLabel, BorderLayout.WEST);
+    fieldPanel.add(xPanel);
+
+    JPanel yPanel = new JPanel(new BorderLayout());
+    JTextField yPos = new JTextField();
+    yPos.setText(Integer.toString(motionToEdit.getParams()[2]));
+    yPos.setColumns(4);
+    JLabel yPosLabel = new JLabel("Y:");
+    yPanel.add(yPos, BorderLayout.CENTER);
+    yPanel.add(yPosLabel, BorderLayout.WEST);
+    fieldPanel.add(yPanel);
+
+    JPanel wPanel = new JPanel(new BorderLayout());
+    JTextField width = new JTextField();
+    width.setText(Integer.toString(motionToEdit.getParams()[3]));
+    width.setColumns(4);
+    JLabel widthLabel = new JLabel("W:");
+    wPanel.add(width, BorderLayout.CENTER);
+    wPanel.add(widthLabel, BorderLayout.WEST);
+    fieldPanel.add(wPanel);
+
+    JPanel hPanel = new JPanel(new BorderLayout());
+    JTextField height = new JTextField();
+    height.setText(Integer.toString(motionToEdit.getParams()[4]));
+    height.setColumns(4);
+    JLabel heightLabel = new JLabel("H:");
+    hPanel.add(height, BorderLayout.CENTER);
+    hPanel.add(heightLabel, BorderLayout.WEST);
+    fieldPanel.add(hPanel);
+
+    JPanel rPanel = new JPanel(new BorderLayout());
+    JTextField red = new JTextField();
+    red.setText(Integer.toString(motionToEdit.getParams()[5]));
+    red.setColumns(4);
+    JLabel redLabel = new JLabel("R:");
+    rPanel.add(red, BorderLayout.CENTER);
+    rPanel.add(redLabel, BorderLayout.WEST);
+    fieldPanel.add(rPanel);
+
+    JPanel gPanel = new JPanel(new BorderLayout());
+    JTextField green = new JTextField();
+    green.setText(Integer.toString(motionToEdit.getParams()[6]));
+    green.setColumns(4);
+    JLabel greenLabel = new JLabel("G:");
+    gPanel.add(green, BorderLayout.CENTER);
+    gPanel.add(greenLabel, BorderLayout.WEST);
+    fieldPanel.add(gPanel);
+
+    JPanel bPanel = new JPanel(new BorderLayout());
+    JTextField blue = new JTextField();
+    blue.setText(Integer.toString(motionToEdit.getParams()[7]));
+    blue.setColumns(4);
+    JLabel blueLabel = new JLabel("B:");
+    bPanel.add(blue, BorderLayout.CENTER);
+    bPanel.add(blueLabel, BorderLayout.WEST);
+    fieldPanel.add(bPanel);
+
+    JButton edit = new JButton("Submit Edits");
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.add(edit);
+    MouseListener ml = new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == edit) {
+          Motion m = new Motion(rom.getElement(selectedShape), null,
+                  Integer.parseInt(tick.getText()),
+                  Integer.parseInt(xPos.getText()), Integer.parseInt(yPos.getText()),
+                  Integer.parseInt(width.getText()), Integer.parseInt(height.getText()),
+                  Integer.parseInt(red.getText()),
+                  Integer.parseInt(green.getText()), Integer.parseInt(blue.getText()));
+          System.out.println(tick.getText() + xPos.getText());
+          rom.editKeyFrame(selectedShape, Integer.parseInt(tick.getText()), m);
+          finalScreen("Keyframe is edited, click start to go back to the animation,"
+                  + "or edit to continue editing.");
+        }
+      }
+    };
+    edit.addMouseListener(ml);
     this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     this.add(fieldPanel, Component.CENTER_ALIGNMENT);
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
