@@ -1,18 +1,11 @@
 package cs3500.animator.view.visualview;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 import cs3500.IAnimation;
 import cs3500.IController;
@@ -31,7 +24,6 @@ public class EnhancedVisualView extends JFrame implements IView {
   private JButton looping;
   private JButton edit;
   private JButton save;
-  private JButton load;
   EditorPanel editPanel;
 
   /**
@@ -72,16 +64,22 @@ public class EnhancedVisualView extends JFrame implements IView {
     looping = new JButton("Loop");
     edit = new JButton("Edit");
     save = new JButton("Save");
-    load = new JButton("Load");
     buttonPane.add(start);
+    start.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     buttonPane.add(pause);
+    pause.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
     buttonPane.add(restart);
+    restart.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     buttonPane.add(looping);
+    looping.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
     buttonPane.add(plus);
+    plus.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     buttonPane.add(minus);
+    minus.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     buttonPane.add(edit);
+    edit.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     buttonPane.add(save);
-    buttonPane.add(load);
+    save.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     this.setTitle("Animation Station");
     this.setSize(m.getWidth(), m.getHeight());
     this.setLocationRelativeTo(null);
@@ -105,11 +103,13 @@ public class EnhancedVisualView extends JFrame implements IView {
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
         if (e.getSource() == pause && !listener.getPaused()) {
+          pause.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
           listener.setPaused();
         }
         else if (e.getSource() == start) {
           if (listener.getPaused()) {
             listener.setPaused();
+            pause.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
           }
           editPanel.setWindow(WindowType.ANIMATION);
         }
@@ -126,6 +126,11 @@ public class EnhancedVisualView extends JFrame implements IView {
         }
         else if (e.getSource() == looping) {
           if (!listener.getLoop()) {
+            looping.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
+            listener.setLoop();
+          }
+          else {
+            looping.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             listener.setLoop();
           }
         }
@@ -137,6 +142,9 @@ public class EnhancedVisualView extends JFrame implements IView {
           refresh();
         }
         else if (e.getSource() == save) {
+          if (!listener.getPaused()) {
+            listener.setPaused();
+          }
           editPanel.setSaveWindow(listener.getSpeed());
           refresh();
         }

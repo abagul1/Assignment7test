@@ -107,7 +107,10 @@ public class EditorPanel extends JPanel {
     shapePanel.add(create);
     shapePanel.add(delete);
     shapePanel.add(shapeScroll);
-    this.add(shapePanel);
+    shapePanel.repaint();
+    this.add(shapePanel, Component.CENTER_ALIGNMENT);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -161,6 +164,8 @@ public class EditorPanel extends JPanel {
     save.addMouseListener(ml);
     this.add(fieldPanel, Component.CENTER_ALIGNMENT);
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -205,11 +210,15 @@ public class EditorPanel extends JPanel {
     create.addMouseListener(ml);
     this.add(fieldPanel, Component.CENTER_ALIGNMENT);
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+    this.revalidate();
+    this.repaint();
   }
 
   private void setAnimationWindow() {
     removeAll();
     this.setBackground(Color.WHITE);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -268,6 +277,8 @@ public class EditorPanel extends JPanel {
     this.add(edit);
     this.add(delete);
     this.add(keyFrameScroll);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -288,6 +299,8 @@ public class EditorPanel extends JPanel {
     this.setBackground(Color.WHITE);
     JLabel m = new JLabel(message);
     this.add(m);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -429,6 +442,8 @@ public class EditorPanel extends JPanel {
     this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     this.add(fieldPanel, Component.CENTER_ALIGNMENT);
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+    this.revalidate();
+    this.repaint();
   }
 
   /**
@@ -550,5 +565,7 @@ public class EditorPanel extends JPanel {
     this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     this.add(fieldPanel, Component.CENTER_ALIGNMENT);
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+    this.revalidate();
+    this.repaint();
   }
 }
