@@ -88,4 +88,9 @@ public class AnimationController implements IController {
   public void setLoop() {
     loop = !loop;
   }
+
+  @Override
+  public int getSpeed() {
+    return this.speed;
+  }
 }

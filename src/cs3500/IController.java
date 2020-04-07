@@ -16,4 +16,6 @@ public interface IController {
 
   void setLoop();
 
+  int getSpeed();
+
 }
