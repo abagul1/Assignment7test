@@ -26,6 +26,7 @@ public class AnimationController implements IController {
     this.paused = true;
     this.currentTick = 0;
     this.loop = false;
+    this.speed = 1;
   }
 
   @Override

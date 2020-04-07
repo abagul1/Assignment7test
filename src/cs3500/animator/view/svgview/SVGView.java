@@ -111,20 +111,24 @@ public class SVGView extends AbstractTextView {
       int[] arr;
       switch (elements.get(key).getType()) {
         case "rectangle":
-          arr = this.motionParser(super.verboseOps.get(key).get(1));
-          str.append("<rect id=\"" + key + "\" x=\"" + arr[1] + "\" y=\"" + arr[2]
-                  + " \" width=\"" + arr[3] + "\" height=\"" + arr[4] + "\"\n"
-                  + "        fill=\"rgb(" + arr[5] + "," + arr[6] + "," + arr[7] + ")\"  >\n");
-          str.append(this.getSVGForElement(key));
-          str.append("</rect>\n");
+          if (verboseOps.get(key).size() > 1) {
+            arr = this.motionParser(super.verboseOps.get(key).get(1));
+            str.append("<rect id=\"" + key + "\" x=\"" + arr[1] + "\" y=\"" + arr[2]
+                    + " \" width=\"" + arr[3] + "\" height=\"" + arr[4] + "\"\n"
+                    + "        fill=\"rgb(" + arr[5] + "," + arr[6] + "," + arr[7] + ")\"  >\n");
+            str.append(this.getSVGForElement(key));
+            str.append("</rect>\n");
+          }
           break;
         case "ellipse":
-          arr = this.motionParser(super.verboseOps.get(key).get(1));
-          str.append("<ellipse id=\"" + key + "\" cx=\"" + arr[1] + "\" cy=\"" + arr[2]
-                  + " \" rx=\"" + arr[3] + "\" ry=\"" + arr[4] + "\"\n"
-                  + "        fill=\"rgb(" + arr[5] + "," + arr[6] + "," + arr[7] + ")\"  >\n");
-          str.append(this.getSVGForElement(key));
-          str.append("</ellipse>\n");
+          if (verboseOps.get(key).size() > 1) {
+            arr = this.motionParser(super.verboseOps.get(key).get(1));
+            str.append("<ellipse id=\"" + key + "\" cx=\"" + arr[1] + "\" cy=\"" + arr[2]
+                    + " \" rx=\"" + arr[3] + "\" ry=\"" + arr[4] + "\"\n"
+                    + "        fill=\"rgb(" + arr[5] + "," + arr[6] + "," + arr[7] + ")\"  >\n");
+            str.append(this.getSVGForElement(key));
+            str.append("</ellipse>\n");
+          }
           break;
         default:
           throw new IllegalArgumentException("Shape doesn't exist");

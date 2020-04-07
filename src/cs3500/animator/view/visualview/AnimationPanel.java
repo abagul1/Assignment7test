@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import cs3500.ReadOnlyAnimation;
 

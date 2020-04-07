@@ -53,7 +53,7 @@ public class Motion {
    * @param currentTick current tick in the animation
    */
   public void fire(int currentTick) {
-    if (prevMotion == null && currentTick == t){
+    if (prevMotion == null && currentTick == t) {
       this.element.setPosn(new Posn(x, y));
       this.element.setHeight(h);
       this.element.setWidth(w);
@@ -145,7 +145,7 @@ public class Motion {
   }
 
   /**
-   * Get the previous motion of the key frame
+   * Get the previous motion of the key frame.
    * @return previous motion
    */
   public Motion getPrevMotion() {

@@ -45,3 +45,11 @@ Operational Notes:
     The way our model is structured, each tick represents a frame, so the speed is both the
     frame rate and the speed of execution. For optimal animation rendering use speeds above 10.
 
+    ***Important***
+    Sometimes the panel backgrounds do not overlay properly. I.e. the edit panel might show up over
+    the animation panel, where you can still see the animation in the background underneath,
+    this is just a graphical problem, however. Everything still operates and works as expected.
+
+    Please select a shape from the scroll panel to delete or edit a key frame.
+
+    And please select a key frame from the options before clicking the edit or delete buttons.

@@ -144,7 +144,7 @@ public class EditorPanel extends JPanel {
         if (saveType.getSelectedIndex() != -1 && e.getSource() == save) {
           String name = fileName.getText();
           String t = saveType.getSelectedValue();
-          switch(t) {
+          switch (t) {
             case "SVG":
               SVGView svg = new SVGView(rom, name, speed);
               svg.execute();
@@ -179,7 +179,7 @@ public class EditorPanel extends JPanel {
     buttonPanel.add(create);
     JPanel fieldPanel = new JPanel();
 
-    JPanel idPanel =new JPanel(new BorderLayout());
+    JPanel idPanel = new JPanel(new BorderLayout());
     JTextField id = new JTextField();
     id.setColumns(10);
     JLabel idLabel = new JLabel("Name: ");
@@ -187,7 +187,7 @@ public class EditorPanel extends JPanel {
     idPanel.add(idLabel, BorderLayout.WEST);
     fieldPanel.add(idPanel);
 
-    JPanel typePanel =new JPanel(new BorderLayout());
+    JPanel typePanel = new JPanel(new BorderLayout());
     JTextField type = new JTextField();
     type.setColumns(10);
     JLabel typeLabel = new JLabel("Type: ");
@@ -250,6 +250,7 @@ public class EditorPanel extends JPanel {
     JScrollPane keyFrameScroll = new JScrollPane(keyFramesList,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JPanel buttonPanel = new JPanel();
     JButton insert = new JButton("Insert");
     JButton edit = new JButton("Edit");
     JButton delete = new JButton("Delete");
@@ -273,10 +274,11 @@ public class EditorPanel extends JPanel {
     insert.addMouseListener(ml);
     edit.addMouseListener(ml);
     delete.addMouseListener(ml);
-    this.add(insert);
-    this.add(edit);
-    this.add(delete);
-    this.add(keyFrameScroll);
+    buttonPanel.add(insert);
+    buttonPanel.add(edit);
+    buttonPanel.add(delete);
+    this.add(keyFrameScroll, BorderLayout.CENTER);
+    this.add(buttonPanel, BorderLayout.WEST);
     this.revalidate();
     this.repaint();
   }
@@ -354,7 +356,7 @@ public class EditorPanel extends JPanel {
   private void drawInsertTextFields() {
     JPanel fieldPanel = new JPanel();
 
-    JPanel tickPanel =new JPanel(new BorderLayout());
+    JPanel tickPanel = new JPanel(new BorderLayout());
     JTextField tick = new JTextField();
     tick.setColumns(4);
     JLabel tickLabel = new JLabel("T: ");
@@ -362,7 +364,7 @@ public class EditorPanel extends JPanel {
     tickPanel.add(tickLabel, BorderLayout.WEST);
     fieldPanel.add(tickPanel);
 
-    JPanel xPanel =new JPanel(new BorderLayout());
+    JPanel xPanel = new JPanel(new BorderLayout());
     JTextField xPos = new JTextField();
     xPos.setColumns(4);
     JLabel xPosLabel = new JLabel("X:");
@@ -431,7 +433,6 @@ public class EditorPanel extends JPanel {
                   Integer.parseInt(width.getText()), Integer.parseInt(height.getText()),
                   Integer.parseInt(red.getText()),
                   Integer.parseInt(green.getText()), Integer.parseInt(blue.getText()));
-          System.out.println(tick.getText() + xPos.getText());
           rom.insertKeyFrame(selectedShape, Integer.parseInt(tick.getText()), m);
           finalScreen("Keyframe is inserted, click start to go back to the animation,"
                   + "or edit to continue editing.");
@@ -469,7 +470,7 @@ public class EditorPanel extends JPanel {
       }
     }
 
-    JPanel tickPanel =new JPanel(new BorderLayout());
+    JPanel tickPanel = new JPanel(new BorderLayout());
     JTextField tick = new JTextField();
     tick.setText(Integer.toString(motionToEdit.getParams()[0]));
     tick.setColumns(4);
@@ -478,7 +479,7 @@ public class EditorPanel extends JPanel {
     tickPanel.add(tickLabel, BorderLayout.WEST);
     fieldPanel.add(tickPanel);
 
-    JPanel xPanel =new JPanel(new BorderLayout());
+    JPanel xPanel = new JPanel(new BorderLayout());
     JTextField xPos = new JTextField();
     xPos.setText(Integer.toString(motionToEdit.getParams()[1]));
     xPos.setColumns(4);
@@ -554,7 +555,6 @@ public class EditorPanel extends JPanel {
                   Integer.parseInt(width.getText()), Integer.parseInt(height.getText()),
                   Integer.parseInt(red.getText()),
                   Integer.parseInt(green.getText()), Integer.parseInt(blue.getText()));
-          System.out.println(tick.getText() + xPos.getText());
           rom.editKeyFrame(selectedShape, Integer.parseInt(tick.getText()), m);
           finalScreen("Keyframe is edited, click start to go back to the animation,"
                   + "or edit to continue editing.");

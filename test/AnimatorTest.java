@@ -76,7 +76,7 @@ public class AnimatorTest {
             10, 200, 200, 54 ,246, 255, 0, 0);
     am.motion("R", 10, 200, 200, 50, 100, 255, 0 ,0,
             12, 200, 200, 54 ,246, 0, 255, 255);
-    am.executeOperationsUntil(10);
+    am.executeOperationsUntil(11);
     assertEquals(0, am.getElement("R").getColor().getGreen(), 1);
     assertEquals(255, am.getElement("R").getColor().getRed(), 1);
     assertEquals(0, am.getElement("R").getColor().getBlue(), 1);
@@ -155,7 +155,7 @@ public class AnimatorTest {
             12, 200, 200, 54 ,246, 0, 255, 255);
     am.motion("R", 12, 200, 200, 50, 100, 0, 255 ,255,
             14, 200, 200, 54 ,246, 23, 45, 154);
-    am.executeOperationsUntil(10);
+    am.executeOperationsUntil(11);
     assertEquals(0, am.getElement("R").getColor().getGreen(), 2);
     assertEquals(255, am.getElement("R").getColor().getRed(), 2);
     assertEquals(0, am.getElement("R").getColor().getBlue(), 2);

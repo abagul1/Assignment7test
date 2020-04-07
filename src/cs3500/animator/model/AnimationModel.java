@@ -420,11 +420,9 @@ public class AnimationModel implements IAnimation {
           keyframes.get(name).add(i, m);
           addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
                   m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
-                  m.getParams()[6], m.getParams()[7], m.getPrevMotion().getParams()[0],
-                  m.getPrevMotion().getParams()[1], m.getPrevMotion().getParams()[2],
-                  m.getPrevMotion().getParams()[3], m.getPrevMotion().getParams()[4],
-                  m.getPrevMotion().getParams()[5], m.getPrevMotion().getParams()[6],
-                  m.getPrevMotion().getParams()[7]);
+                  m.getParams()[6], m.getParams()[7], m.getParams()[0], m.getParams()[1],
+                  m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+                  m.getParams()[6], m.getParams()[7]);
           break;
         }
         else {
