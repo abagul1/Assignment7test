@@ -195,6 +195,13 @@ public class AnimationModel implements IAnimation {
     this.addVerboseInsert(id, type);
   }
 
+  @Override
+  public void deleteElement(String id) {
+    elements.remove(id);
+    keyframes.remove(id);
+    declaredShapes.remove(id);
+  }
+
   /**
    * Create a textual description of the insert operation.
    * @param id element id
@@ -372,6 +379,10 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void resetAnimation() {
+    for (String name : elements.keySet()) {
+      Color c = new Color(0,0,0,0);
+      elements.get(name).setColor(c);
+    }
     this.currentTick = 0;
   }
 
@@ -392,7 +403,6 @@ public class AnimationModel implements IAnimation {
         if (keyframes.get(name).get(i).getPrevMotion() == null) {
           keyframes.get(name).get(i).setPrevMotion(m);
           m.setNextMotion(keyframes.get(name).get(i));
-          //todo: could run into circular issues here
           keyframes.get(name).add(i, m);
           break;
         }
@@ -441,6 +451,16 @@ public class AnimationModel implements IAnimation {
         keyframes.get(name).set(keyframes.get(name).indexOf(motions), m);
       }
     }
+  }
+
+  @Override
+  public boolean isDone(int currentTick) {
+    for (String key : keyframes.keySet()) {
+      if (keyframes.get(key).get(keyframes.get(key).size() - 1).getParams()[0] > currentTick) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

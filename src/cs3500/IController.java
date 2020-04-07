@@ -12,4 +12,8 @@ public interface IController {
 
   void setPaused();
 
+  boolean getLoop();
+
+  void setLoop();
+
 }

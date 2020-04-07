@@ -50,6 +50,8 @@ public interface IAnimation extends ReadOnlyAnimation {
    */
   void insertElement(String name, String type);
 
+  void deleteElement(String name);
+
   /**
    * Executes the animations by running all the operations at the given ticks.
    */
@@ -71,5 +73,7 @@ public interface IAnimation extends ReadOnlyAnimation {
   void deleteKeyFrame(String name, int tick);
 
   void editKeyFrame(String name, int tick, Motion m);
+
+  boolean isDone(int tick);
 
 }

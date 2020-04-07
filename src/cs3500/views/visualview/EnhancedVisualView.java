@@ -21,9 +21,6 @@ import cs3500.IView;
 
 public class EnhancedVisualView extends JFrame implements IView {
   private IAnimation m;
-  private int x;
-  private int y;
-  private boolean p;
   private JButton start;
   private JButton pause;
   private JButton restart;
@@ -59,7 +56,6 @@ public class EnhancedVisualView extends JFrame implements IView {
     aniPane.add(scrollPane);
     this.add(splitPane);
 
-    p = true;
     start = new JButton("Start");
     pause = new JButton("Pause");
     restart = new JButton("Restart");
@@ -108,9 +104,6 @@ public class EnhancedVisualView extends JFrame implements IView {
         else if (e.getSource() == restart) {
           m.resetAnimation();
           refresh();
-          if (!listener.getPaused()) {
-            listener.setPaused();
-          }
           editPanel.setWindow(WindowType.ANIMATION);
         }
         else if (e.getSource() == plus) {
@@ -120,14 +113,17 @@ public class EnhancedVisualView extends JFrame implements IView {
           listener.changeSpeed("-");
         }
         else if (e.getSource() == looping) {
-          //Todo: implement looping
+          if (!listener.getLoop()) {
+            listener.setLoop();
+          }
         }
         else if (e.getSource() == edit) {
-          p = true;
+          if (!listener.getPaused()) {
+            listener.setPaused();
+          }
           editPanel.setWindow(WindowType.SHAPEMENU);
           refresh();
         }
-        listener.handleButtonClick(x, y);
       }
     };
     pause.addMouseListener(ml);
