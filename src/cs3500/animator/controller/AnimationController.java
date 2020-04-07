@@ -1,4 +1,4 @@
-package cs3500.controller;
+package cs3500.animator.controller;
 
 import javax.swing.*;
 

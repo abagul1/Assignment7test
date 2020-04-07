@@ -1,4 +1,4 @@
-package cs3500.model;
+package cs3500.animator.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -187,7 +187,6 @@ public class AnimationModel implements IAnimation {
                 + type);
 
     }
-
     keyframes.put(id, new ArrayList<>());
     declaredShapes.put(id, type);
     this.addVerboseInsert(id, type);
@@ -386,12 +385,12 @@ public class AnimationModel implements IAnimation {
 
   @Override
   public void insertKeyFrame(String name, int tick, Motion m) {
+    if (keyframes.get(name).isEmpty()) {
+      keyframes.get(name).add(m);
+      return;
+    }
     for (int i = 0; i < keyframes.get(name).size(); i++) {
-      if (keyframes.get(name).isEmpty()) {
-        keyframes.get(name).add(m);
-        break;
-      }
-      else if (keyframes.get(name).get(keyframes.get(name).size() - 1).getParams()[0] < tick) {
+      if (keyframes.get(name).get(keyframes.get(name).size() - 1).getParams()[0] < tick) {
         m.setPrevMotion(keyframes.get(name).get(keyframes.get(name).size() - 1));
         keyframes.get(name).get(keyframes.get(name).size() - 1).setNextMotion(m);
         keyframes.get(name).add(m);
@@ -456,10 +455,9 @@ public class AnimationModel implements IAnimation {
   @Override
   public boolean isDone(int currentTick) {
     for (String key : keyframes.keySet()) {
-      if (!keyframes.isEmpty()
+      if (!keyframes.get(key).isEmpty()
               && keyframes.get(key).get(keyframes.get(key).size() - 1)
               .getParams()[0] > currentTick) {
-        //TODO: when list is empty throws out of bounds.
         return false;
       }
     }

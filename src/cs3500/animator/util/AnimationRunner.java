@@ -2,13 +2,13 @@ package cs3500.animator.util;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import javax.swing.Timer;
+
 import cs3500.IAnimation;
 import cs3500.IController;
 import cs3500.IView;
-import cs3500.controller.AnimationController;
-import cs3500.model.AnimationModel;
-import cs3500.views.ViewCreator;
+import cs3500.animator.controller.AnimationController;
+import cs3500.animator.model.AnimationModel;
+import cs3500.animator.view.ViewCreator;
 
 /**
  * Main Class to run the program from.

@@ -1,4 +1,4 @@
-package cs3500.views;
+package cs3500.animator.view;
 
 import java.util.LinkedHashMap;
 import java.util.List;

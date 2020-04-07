@@ -1,14 +1,14 @@
-package cs3500.views;
+package cs3500.animator.view;
 
 import java.util.Objects;
 
 import cs3500.IAnimation;
 import cs3500.IView;
-import cs3500.views.svgview.SVGView;
-import cs3500.views.textview.TextView;
-import cs3500.views.textview.TextViewSysOut;
-import cs3500.views.visualview.EnhancedVisualView;
-import cs3500.views.visualview.VisualView;
+import cs3500.animator.view.svgview.SVGView;
+import cs3500.animator.view.textview.TextView;
+import cs3500.animator.view.textview.TextViewSysOut;
+import cs3500.animator.view.visualview.EnhancedVisualView;
+import cs3500.animator.view.visualview.VisualView;
 
 /**
  * Factory class to create the specified view.

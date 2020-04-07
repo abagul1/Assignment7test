@@ -1,11 +1,11 @@
-package cs3500.views.textview;
+package cs3500.animator.view.textview;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 import cs3500.IController;
 import cs3500.ReadOnlyAnimation;
-import cs3500.views.AbstractTextView;
+import cs3500.animator.view.AbstractTextView;
 
 /**
  * Represents the textual view for the animation.

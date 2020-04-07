@@ -1,11 +1,10 @@
-package cs3500.views.visualview;
+package cs3500.animator.view.visualview;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import java.util.Scanner;
 
 
 import javax.swing.*;
@@ -16,17 +15,14 @@ import cs3500.motions.Motion;
 
 public class EditorPanel extends JPanel {
   private IAnimation rom;
-  private WindowType wt;
   private String selectedShape;
 
   public EditorPanel(IAnimation m) {
     super();
     this.rom = m;
-    wt = WindowType.ANIMATION;
   }
 
   public void setWindow(WindowType wt) {
-    this.wt = wt;
     switch (wt) {
       case ANIMATION:
         this.removeAll();
@@ -84,6 +80,10 @@ public class EditorPanel extends JPanel {
     shapePanel.add(delete);
     shapePanel.add(shapeScroll);
     this.add(shapePanel);
+  }
+
+  private void setSaveWindow() {
+
   }
 
   private void createShape() {

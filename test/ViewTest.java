@@ -13,13 +13,13 @@ import cs3500.IView;
 import cs3500.elements.Ellipse;
 import cs3500.elements.Posn;
 import cs3500.elements.Rectangle;
-import cs3500.model.AnimationModel;
-import cs3500.views.AbstractTextView;
-import cs3500.views.ViewCreator;
-import cs3500.views.svgview.SVGView;
-import cs3500.views.textview.TextView;
-import cs3500.views.textview.TextViewSysOut;
-import cs3500.views.visualview.VisualView;
+import cs3500.animator.model.AnimationModel;
+import cs3500.animator.view.AbstractTextView;
+import cs3500.animator.view.ViewCreator;
+import cs3500.animator.view.svgview.SVGView;
+import cs3500.animator.view.textview.TextView;
+import cs3500.animator.view.textview.TextViewSysOut;
+import cs3500.animator.view.visualview.VisualView;
 
 /**
  * Tests for views.

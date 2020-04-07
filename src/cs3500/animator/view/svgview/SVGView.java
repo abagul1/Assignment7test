@@ -1,4 +1,4 @@
-package cs3500.views.svgview;
+package cs3500.animator.view.svgview;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import cs3500.IController;
 import cs3500.ReadOnlyAnimation;
-import cs3500.views.AbstractTextView;
+import cs3500.animator.view.AbstractTextView;
 
 /**
  * Represents the view for an svg formatted file.

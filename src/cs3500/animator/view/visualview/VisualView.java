@@ -1,13 +1,11 @@
-package cs3500.views.visualview;
+package cs3500.animator.view.visualview;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.Scrollable;
 
 import cs3500.IController;
 import cs3500.IView;

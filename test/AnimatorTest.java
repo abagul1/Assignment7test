@@ -3,7 +3,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.awt.Color;
 
-import cs3500.model.AnimationModel;
+import cs3500.animator.model.AnimationModel;
 import cs3500.IAnimation;
 import cs3500.IElement;
 import cs3500.elements.Posn;

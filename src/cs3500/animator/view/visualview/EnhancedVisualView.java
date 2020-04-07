@@ -1,4 +1,4 @@
-package cs3500.views.visualview;
+package cs3500.animator.view.visualview;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -28,6 +28,8 @@ public class EnhancedVisualView extends JFrame implements IView {
   private JButton minus;
   private JButton looping;
   private JButton edit;
+  private JButton save;
+  private JButton load;
   EditorPanel editPanel;
 
   public EnhancedVisualView(IAnimation m) {
@@ -63,6 +65,8 @@ public class EnhancedVisualView extends JFrame implements IView {
     minus = new JButton("DecSpeed");
     looping = new JButton("Loop");
     edit = new JButton("Edit");
+    save = new JButton("Save");
+    load = new JButton("Load");
     buttonPane.add(start);
     buttonPane.add(pause);
     buttonPane.add(restart);
@@ -70,6 +74,8 @@ public class EnhancedVisualView extends JFrame implements IView {
     buttonPane.add(plus);
     buttonPane.add(minus);
     buttonPane.add(edit);
+    buttonPane.add(save);
+    buttonPane.add(load);
     this.setTitle("Animation Station");
     this.setSize(m.getWidth(), m.getHeight());
     this.setLocationRelativeTo(null);
@@ -124,6 +130,12 @@ public class EnhancedVisualView extends JFrame implements IView {
           editPanel.setWindow(WindowType.SHAPEMENU);
           refresh();
         }
+        else if (e.getSource() == save) {
+
+        }
+        else if (e.getSource() == load) {
+
+        }
       }
     };
     pause.addMouseListener(ml);
@@ -133,6 +145,8 @@ public class EnhancedVisualView extends JFrame implements IView {
     minus.addMouseListener(ml);
     looping.addMouseListener(ml);
     edit.addMouseListener(ml);
+    save.addMouseListener(ml);
+    load.addMouseListener(ml);
   }
 
   @Override

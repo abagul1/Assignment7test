@@ -1,4 +1,4 @@
-package cs3500.views.visualview;
+package cs3500.animator.view.visualview;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
