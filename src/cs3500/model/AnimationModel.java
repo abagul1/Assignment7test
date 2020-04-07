@@ -59,25 +59,9 @@ public class AnimationModel implements IAnimation {
 
     this.checkNotNull();
     if (!elements.containsKey(name)) {
-      try {
-        switch (declaredShapes.get(name)) {
-          case "rectangle":
-            elements.put(name, new Rectangle(name, new Color(r1, g1, b1, 0), new Posn(x1, y1),
-                    h1, w1));
-            //TODO: alpha doesnt reset when animation is reset, i.e. buildings star problem
-            break;
-          case "ellipse":
-            elements.put(name, new Ellipse(name, new Color(r1, g1, b1,0), new Posn(x1, y1), h1,
-                    w1));
-            break;
-          default:
-            throw new IllegalArgumentException("This type of shape doesn't exist: "
-                    + declaredShapes.get(name));
-        }
-      } catch (NullPointerException npe) {
-        throw new IllegalArgumentException("Element id doesn't exist");
-      }
+      throw new IllegalArgumentException("Name doesnt exist");
     }
+
     this.setKeyframes(name, t2, x2, y2, w2, h2, r2, g2, b2);
     this.addVerboseMotion(name, t1, x1, y1, w1, h1, r1, g1, b1, t2, x2, y2, w2, h2, r2, g2, b2);
   }
@@ -96,10 +80,6 @@ public class AnimationModel implements IAnimation {
    */
   private void setKeyframes(String name, int t, int x, int y, int w, int h,
                            int r, int g, int b) {
-    if (!keyframes.containsKey(name)) {
-      keyframes.put(name, new ArrayList<>());
-    }
-
     int listSize = keyframes.get(name).size();
     if (listSize > 0) {
       keyframes.get(name).add(new Motion(elements.get(name), keyframes.get(name).get(listSize - 1),
@@ -191,6 +171,24 @@ public class AnimationModel implements IAnimation {
       throw new IllegalArgumentException("Cannot have duplicate elements");
     }
 
+    switch (type) {
+      case "rectangle":
+        elements.put(id, new Rectangle(id, new Color(0, 0, 0, 0),
+                new Posn(0, 0),
+                0, 0));
+        break;
+      case "ellipse":
+        elements.put(id, new Ellipse(id, new Color(0, 0, 0,0), new Posn(0, 0),
+                0,
+                0));
+        break;
+      default:
+        throw new IllegalArgumentException("This type of shape doesn't exist: "
+                + type);
+
+    }
+
+    keyframes.put(id, new ArrayList<>());
     declaredShapes.put(id, type);
     this.addVerboseInsert(id, type);
   }
@@ -456,7 +454,9 @@ public class AnimationModel implements IAnimation {
   @Override
   public boolean isDone(int currentTick) {
     for (String key : keyframes.keySet()) {
-      if (keyframes.get(key).get(keyframes.get(key).size() - 1).getParams()[0] > currentTick) {
+      if (!keyframes.isEmpty()
+              && keyframes.get(key).get(keyframes.get(key).size() - 1)
+              .getParams()[0] > currentTick) {
         return false;
       }
     }

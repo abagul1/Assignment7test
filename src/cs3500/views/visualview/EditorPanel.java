@@ -16,6 +16,7 @@ import cs3500.motions.Motion;
 public class EditorPanel extends JPanel {
   private IAnimation rom;
   private WindowType wt;
+  private String selectedShape;
 
   public EditorPanel(IAnimation m) {
     super();
@@ -41,7 +42,6 @@ public class EditorPanel extends JPanel {
   private void setShapeWindow() {
     this.removeAll();
     JPanel shapePanel = new JPanel();
-    //TODO: When the animation is started, and then edit is clicked, doesnt fully overlay.
     this.setBackground(Color.black);
     JButton edit = new JButton("Edit KeyFrame");
     JButton create = new JButton("Create Shape");
@@ -60,6 +60,7 @@ public class EditorPanel extends JPanel {
         String data;
         if (shapeList.getSelectedIndex() != -1 && e.getSource() == edit) {
           data = shapeList.getSelectedValue();
+          selectedShape = shapeList.getSelectedValue();
           List<Motion> keyFrames = rom.getKeyFrame(data);
           setKeyFramesWindow(keyFrames);
         }
@@ -133,6 +134,7 @@ public class EditorPanel extends JPanel {
   private void setKeyFramesWindow(List<Motion> lm) {
     this.removeAll();
     this.setBackground(Color.WHITE);
+    System.out.println(lm.size());
     String[] m = new String[lm.size()];
     int i = 0;
     for (Motion motion : lm) {
@@ -186,28 +188,7 @@ public class EditorPanel extends JPanel {
   private void insertKeyFrame() {
     this.removeAll();
     this.setBackground(Color.WHITE);
-    JPanel fieldPanel = this.drawTextFields();
-    JButton insert = new JButton("Insert KeyFrame");
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.add(insert);
-    MouseListener ml = new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (e.getSource() == insert) {
-          StringBuilder str = new StringBuilder();
-          for (Component c : fieldPanel.getComponents()) {
-            if (c instanceof JTextField) {
-              System.out.println(((JTextField) c).getText());
-              str.append(((JTextField) c).getText());
-            }
-          }
-        }
-      }
-    };
-    insert.addMouseListener(ml);
-    this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-    this.add(fieldPanel, Component.CENTER_ALIGNMENT);
-    this.add(buttonPanel, Component.CENTER_ALIGNMENT);
+    this.drawTextFields();
   }
 
   private void finalScreen(String message) {
@@ -241,7 +222,7 @@ public class EditorPanel extends JPanel {
     return new Dimension(rom.getWidth(), rom.getHeight());
   }
 
-  private JPanel drawTextFields() {
+  private void drawTextFields() {
     JPanel fieldPanel = new JPanel();
 
     JPanel tickPanel =new JPanel(new BorderLayout());
@@ -308,7 +289,29 @@ public class EditorPanel extends JPanel {
     bPanel.add(blueLabel, BorderLayout.WEST);
     fieldPanel.add(bPanel);
 
-    return fieldPanel;
-
+    JButton insert = new JButton("Insert KeyFrame");
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.add(insert);
+    MouseListener ml = new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == insert) {
+          Motion m = new Motion(rom.getElement(selectedShape), null,
+                  Integer.parseInt(tick.getText()),
+                  Integer.parseInt(xPos.getText()), Integer.parseInt(yPos.getText()),
+                  Integer.parseInt(width.getText()), Integer.parseInt(height.getText()),
+                  Integer.parseInt(red.getText()),
+                  Integer.parseInt(green.getText()), Integer.parseInt(blue.getText()));
+          System.out.println(tick.getText() + xPos.getText());
+          rom.insertKeyFrame(selectedShape, Integer.parseInt(tick.getText()), m);
+          finalScreen("Keyframe is inserted, click start to go back to the animation,"
+                  + "or edit to continue editing.");
+        }
+      }
+    };
+    insert.addMouseListener(ml);
+    this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+    this.add(fieldPanel, Component.CENTER_ALIGNMENT);
+    this.add(buttonPanel, Component.CENTER_ALIGNMENT);
   }
 }
