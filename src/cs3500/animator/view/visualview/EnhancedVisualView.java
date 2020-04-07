@@ -18,7 +18,9 @@ import cs3500.IAnimation;
 import cs3500.IController;
 import cs3500.IView;
 
-
+/**
+ * Visual view with edit capabilities.
+ */
 public class EnhancedVisualView extends JFrame implements IView {
   private IAnimation m;
   private JButton start;
@@ -32,6 +34,10 @@ public class EnhancedVisualView extends JFrame implements IView {
   private JButton load;
   EditorPanel editPanel;
 
+  /**
+   * Constructor for a visual view with edit capabilities.
+   * @param m model to be used
+   */
   public EnhancedVisualView(IAnimation m) {
     super();
 
@@ -42,10 +48,10 @@ public class EnhancedVisualView extends JFrame implements IView {
     }
     this.m = m;
     editPanel = new EditorPanel(m);
-    JPanel aniPane = new JPanel(); //Bottom Panel
-    JPanel buttonPane = new JPanel(); //Top panel
+    JPanel aniPane = new JPanel();
+    JPanel buttonPane = new JPanel();
 
-    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPane, aniPane); //Split pane
+    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttonPane, aniPane);
     this.setPreferredSize(getPreferredSize());
     getContentPane().setLayout(new GridLayout());
     getContentPane().add(splitPane);
@@ -134,9 +140,6 @@ public class EnhancedVisualView extends JFrame implements IView {
           editPanel.setSaveWindow(listener.getSpeed());
           refresh();
         }
-        else if (e.getSource() == load) {
-
-        }
       }
     };
     pause.addMouseListener(ml);
@@ -147,7 +150,6 @@ public class EnhancedVisualView extends JFrame implements IView {
     looping.addMouseListener(ml);
     edit.addMouseListener(ml);
     save.addMouseListener(ml);
-    load.addMouseListener(ml);
   }
 
   @Override

@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import cs3500.IAnimation;
 import cs3500.IElement;
 import cs3500.animator.util.AnimationBuilder;
@@ -261,6 +260,10 @@ public class AnimationModel implements IAnimation {
     }
   }
 
+  /**
+   * Checks if the animation has finished.
+   * @return true or false
+   */
   private boolean checkDone() {
     for (String key : keyframes.keySet()) {
       if (!keyframes.get(key).isEmpty()) {
@@ -451,29 +454,34 @@ public class AnimationModel implements IAnimation {
       if (m.getParams()[0] == tick) {
         if (m.getPrevMotion() == null && m.getNextMotion() == null) {
           it.remove();
-          deleteVerboseMotion(name, tick, m);
+          deleteVerboseMotion(name, tick);
         }
         else if (m.getPrevMotion() == null) {
           m.getNextMotion().setPrevMotion(null);
           it.remove();
-          deleteVerboseMotion(name, tick, m);
+          deleteVerboseMotion(name, tick);
         }
         else if (m.getNextMotion() == null) {
           m.getPrevMotion().setNextMotion(null);
           it.remove();
-          deleteVerboseMotion(name, tick, m);
+          deleteVerboseMotion(name, tick);
         }
         else {
           m.getNextMotion().setPrevMotion(m.getPrevMotion());
           m.getPrevMotion().setNextMotion(m.getNextMotion());
           it.remove();
-          deleteVerboseMotion(name, tick, m);
+          deleteVerboseMotion(name, tick);
         }
       }
     }
   }
 
-  private void deleteVerboseMotion(String name, int tick, Motion m) {
+  /**
+   * Deletes a key frame from the verbose motion.
+   * @param name name of shape
+   * @param tick tick of keyframe to be deleted
+   */
+  private void deleteVerboseMotion(String name, int tick) {
     Iterator<String> it = verboseOps.get(name).iterator();
     while (it.hasNext()) {
       String str = it.next();
@@ -583,6 +591,10 @@ public class AnimationModel implements IAnimation {
       return this;
     }
 
+    /**
+     * Checks if model is null.
+     * @return whether the model is null or not
+     */
     private boolean isModelToBuildNull() {
       return modelToBuild == null;
     }

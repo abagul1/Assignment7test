@@ -5,7 +5,7 @@ import cs3500.IElement;
 import cs3500.elements.Posn;
 
 /**
- * Class to represent a motion, and calculate the changes of an element over time.
+ * Class to represent a motion/keyframe, and calculate the changes of an element over time.
  */
 public class Motion {
   private IElement element;
@@ -53,7 +53,6 @@ public class Motion {
    * @param currentTick current tick in the animation
    */
   public void fire(int currentTick) {
-    //TODO: fix problem where elements that arent supposed to show yet show.
     if (prevMotion == null && currentTick == t){
       this.element.setPosn(new Posn(x, y));
       this.element.setHeight(h);
@@ -122,33 +121,42 @@ public class Motion {
   }
 
   /**
-   * Gets the id of the motion's element.
-   * @return id
+   * Gets the parameters of the keyframe.
+   * @return an array of parameters
    */
-  public String getElementId() {
-    return this.element.getID();
-  }
-
-
   public int[] getParams() {
     return new int[] {t, x, y, w, h, r, g, b};
   }
 
+  /**
+   * Set the next motion of the key frame.
+   * @param m next motion
+   */
   public void setNextMotion(Motion m) {
     this.nextMotion = m;
   }
 
+  /**
+   * Set the previous motion of the key frame.
+   * @param m previous motion
+   */
   public void setPrevMotion(Motion m) {
     this.prevMotion = m;
   }
 
+  /**
+   * Get the previous motion of the key frame
+   * @return previous motion
+   */
   public Motion getPrevMotion() {
     return prevMotion;
   }
 
+  /**
+   * Get the next motion of the key frame.
+   * @return next motion
+   */
   public Motion getNextMotion() {
     return nextMotion;
   }
-
-
 }

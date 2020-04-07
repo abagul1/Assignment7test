@@ -14,6 +14,10 @@ public interface IView {
    */
   void makeVisible();
 
+  /**
+   * Listener to check for mouse clicks on the view.
+   * @param listener controller
+   */
   void addClickListener(IController listener);
 
   /**

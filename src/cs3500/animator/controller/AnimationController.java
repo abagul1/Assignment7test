@@ -1,11 +1,13 @@
 package cs3500.animator.controller;
 
-import javax.swing.*;
-
+import javax.swing.Timer;
 import cs3500.IAnimation;
 import cs3500.IController;
 import cs3500.IView;
 
+/**
+ * Class that acts as the controller in the MVC format. Interfaces the model with the view.
+ */
 public class AnimationController implements IController {
   IView view;
   IAnimation a;
@@ -15,6 +17,10 @@ public class AnimationController implements IController {
   boolean paused;
   boolean loop;
 
+  /**
+   * Constructor for the animation controller.
+   * @param v view to show
+   */
   public AnimationController(IView v) {
     this.view = v;
     this.paused = true;
@@ -40,6 +46,9 @@ public class AnimationController implements IController {
     }
   }
 
+  /**
+   * Executes the view.
+   */
   private void execute() {
     if (!paused) {
       if (a.isDone(currentTick) && loop) {
@@ -50,11 +59,6 @@ public class AnimationController implements IController {
       a.executeOneTick();
       currentTick++;
     }
-  }
-
-  @Override
-  public void handleButtonClick(int x, int y) {
-
   }
 
   @Override

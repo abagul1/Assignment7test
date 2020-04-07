@@ -1,29 +1,50 @@
 package cs3500.animator.view.visualview;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-
-
-import javax.swing.*;
-
-
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import cs3500.IAnimation;
 import cs3500.animator.view.svgview.SVGView;
 import cs3500.animator.view.textview.TextView;
 import cs3500.motions.Motion;
 
+/**
+ * Editor panel for to support edit functionality that the user can do with an animation.
+ * Handles the redrawing of panels on the frame, and some of the logic of editing.
+ */
 public class EditorPanel extends JPanel {
   private IAnimation rom;
   private String selectedShape;
 
+  /**
+   * Constructor for a editor view.
+   * @param m model to use
+   */
   public EditorPanel(IAnimation m) {
     super();
     this.rom = m;
   }
 
+  /**
+   * Window toggle between the animation screen and the edit screen.
+   * @param wt window type
+   */
   public void setWindow(WindowType wt) {
     switch (wt) {
       case ANIMATION:
@@ -38,11 +59,16 @@ public class EditorPanel extends JPanel {
     }
   }
 
+  /**
+   * Method to redraw the panel, and allow the user to select from all the shapes in the animation.
+   * Allows the user to edit keyframes of a specific shape, create a new shape, or delete a
+   * shape.
+   */
   private void setShapeWindow() {
     this.removeAll();
     JPanel shapePanel = new JPanel();
     this.setBackground(Color.black);
-    JButton edit = new JButton("Edit KeyFrame");
+    JButton edit = new JButton("Edit KeyFrames");
     JButton create = new JButton("Create Shape");
     JButton delete = new JButton("Delete Shape");
 
@@ -84,6 +110,10 @@ public class EditorPanel extends JPanel {
     this.add(shapePanel);
   }
 
+  /**
+   * Method allows the user to save their animation to a specified path.
+   * @param speed of the current animation
+   */
   public void setSaveWindow(int speed) {
     this.removeAll();
     this.setBackground(Color.WHITE);
@@ -133,6 +163,9 @@ public class EditorPanel extends JPanel {
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
   }
 
+  /**
+   * Method allows the user to create a new shape for the animation.
+   */
   private void createShape() {
     this.removeAll();
     this.setBackground(Color.WHITE);
@@ -179,6 +212,11 @@ public class EditorPanel extends JPanel {
     this.setBackground(Color.WHITE);
   }
 
+  /**
+   * Window that presents the user with all the keyframes of a given shape. Allows user
+   * to choose what to do with the key frames, whether it be edit, insert, or delete.
+   * @param lm list of key frames
+   */
   private void setKeyFramesWindow(List<Motion> lm) {
     this.removeAll();
     this.setBackground(Color.WHITE);
@@ -232,12 +270,19 @@ public class EditorPanel extends JPanel {
     this.add(keyFrameScroll);
   }
 
+  /**
+   * Method to insert a key frame, called from the controller. Sets the new background.
+   */
   private void insertKeyFrame() {
     this.removeAll();
     this.setBackground(Color.WHITE);
     this.drawInsertTextFields();
   }
 
+  /**
+   * Confirmation screen once something is edited.
+   * @param message to be presented
+   */
   private void finalScreen(String message) {
     this.removeAll();
     this.setBackground(Color.WHITE);
@@ -245,12 +290,20 @@ public class EditorPanel extends JPanel {
     this.add(m);
   }
 
+  /**
+   * Method to edit a key frame, called from the controller. Sets the new background.
+   * @param data is information about the keyframe to be edited
+   */
   private void editKeyFrame(String data) {
     this.removeAll();
     this.setBackground(Color.WHITE);
     this.drawEditTextFields(data);
   }
 
+  /**
+   * Method to delete a key frame, and redraw view fields.
+   * @param data is information about the keyframe to be deleted
+   */
   private void deleteKeyFrame(String data) {
     String str = data.substring(3);
     for (int i = 0; i < str.length(); i++) {
@@ -262,7 +315,7 @@ public class EditorPanel extends JPanel {
       }
     }
     this.finalScreen("Keyframe is deleted, click start to go back to the animation,"
-            + "or edit to continue editing.");
+            + " or edit to continue editing.");
   }
 
   @Override
@@ -281,6 +334,10 @@ public class EditorPanel extends JPanel {
     return new Dimension(rom.getWidth(), rom.getHeight());
   }
 
+  /**
+   * Creates the fields for the user to input the parameters of the keyframe to be inserted.
+   * Also draws the board to present this view, and calls the methods to insert the keyframe.
+   */
   private void drawInsertTextFields() {
     JPanel fieldPanel = new JPanel();
 
@@ -374,6 +431,11 @@ public class EditorPanel extends JPanel {
     this.add(buttonPanel, Component.CENTER_ALIGNMENT);
   }
 
+  /**
+   * Creates the fields for the user to input the parameters of the keyframe to be edited.
+   * Also draws the board to present this view, and calls the methods to edit the keyframe.
+   * @param data of current key frame state
+   */
   private void drawEditTextFields(String data) {
     JPanel fieldPanel = new JPanel();
     String str = data.substring(3);

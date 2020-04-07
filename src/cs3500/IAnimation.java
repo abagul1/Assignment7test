@@ -68,12 +68,34 @@ public interface IAnimation extends ReadOnlyAnimation {
    */
   void resetAnimation();
 
+  /**
+   * Insert a key frame for a shape.
+   * @param name shape
+   * @param tick tick of keyframe
+   * @param m keyframe object
+   */
   void insertKeyFrame(String name, int tick, Motion m);
 
+  /**
+   * Delete a key frame.
+   * @param name of shape
+   * @param tick tick of keyframe
+   */
   void deleteKeyFrame(String name, int tick);
 
+  /**
+   * Edit a key frame.
+   * @param name of shape
+   * @param tick of keyframe
+   * @param m keyframe object
+   */
   void editKeyFrame(String name, int tick, Motion m);
 
+  /**
+   * Checks if the animation is complete.
+   * @param tick current tick of animation
+   * @return true or false
+   */
   boolean isDone(int tick);
 
 }
