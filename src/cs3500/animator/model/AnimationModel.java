@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import cs3500.IAnimation;
 import cs3500.IElement;
@@ -197,6 +198,7 @@ public class AnimationModel implements IAnimation {
     elements.remove(id);
     keyframes.remove(id);
     declaredShapes.remove(id);
+    verboseOps.remove(id);
   }
 
   /**
@@ -387,6 +389,11 @@ public class AnimationModel implements IAnimation {
   public void insertKeyFrame(String name, int tick, Motion m) {
     if (keyframes.get(name).isEmpty()) {
       keyframes.get(name).add(m);
+      addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
+              m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+              m.getParams()[6], m.getParams()[7], m.getParams()[0], m.getParams()[1],
+              m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+              m.getParams()[6], m.getParams()[7]);
       return;
     }
     for (int i = 0; i < keyframes.get(name).size(); i++) {
@@ -394,6 +401,13 @@ public class AnimationModel implements IAnimation {
         m.setPrevMotion(keyframes.get(name).get(keyframes.get(name).size() - 1));
         keyframes.get(name).get(keyframes.get(name).size() - 1).setNextMotion(m);
         keyframes.get(name).add(m);
+        addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
+                  m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+                  m.getParams()[6], m.getParams()[7], m.getPrevMotion().getParams()[0],
+                  m.getPrevMotion().getParams()[1], m.getPrevMotion().getParams()[2],
+                  m.getPrevMotion().getParams()[3], m.getPrevMotion().getParams()[4],
+                  m.getPrevMotion().getParams()[5], m.getPrevMotion().getParams()[6],
+                  m.getPrevMotion().getParams()[7]);
         break;
       }
       else if (keyframes.get(name).get(i).getParams()[0] > tick) {
@@ -401,6 +415,13 @@ public class AnimationModel implements IAnimation {
           keyframes.get(name).get(i).setPrevMotion(m);
           m.setNextMotion(keyframes.get(name).get(i));
           keyframes.get(name).add(i, m);
+          addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
+                  m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+                  m.getParams()[6], m.getParams()[7], m.getPrevMotion().getParams()[0],
+                  m.getPrevMotion().getParams()[1], m.getPrevMotion().getParams()[2],
+                  m.getPrevMotion().getParams()[3], m.getPrevMotion().getParams()[4],
+                  m.getPrevMotion().getParams()[5], m.getPrevMotion().getParams()[6],
+                  m.getPrevMotion().getParams()[7]);
           break;
         }
         else {
@@ -409,6 +430,13 @@ public class AnimationModel implements IAnimation {
           m.setPrevMotion( keyframes.get(name).get(i - 1));
           m.setNextMotion(keyframes.get(name).get(i));
           keyframes.get(name).add(i, m);
+          addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
+                  m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+                  m.getParams()[6], m.getParams()[7], m.getPrevMotion().getParams()[0],
+                  m.getPrevMotion().getParams()[1], m.getPrevMotion().getParams()[2],
+                  m.getPrevMotion().getParams()[3], m.getPrevMotion().getParams()[4],
+                  m.getPrevMotion().getParams()[5], m.getPrevMotion().getParams()[6],
+                  m.getPrevMotion().getParams()[7]);
         }
         break;
       }
@@ -423,22 +451,55 @@ public class AnimationModel implements IAnimation {
       if (m.getParams()[0] == tick) {
         if (m.getPrevMotion() == null && m.getNextMotion() == null) {
           it.remove();
+          deleteVerboseMotion(name, tick, m);
         }
         else if (m.getPrevMotion() == null) {
           m.getNextMotion().setPrevMotion(null);
           it.remove();
+          deleteVerboseMotion(name, tick, m);
         }
         else if (m.getNextMotion() == null) {
           m.getPrevMotion().setNextMotion(null);
           it.remove();
+          deleteVerboseMotion(name, tick, m);
         }
         else {
           m.getNextMotion().setPrevMotion(m.getPrevMotion());
           m.getPrevMotion().setNextMotion(m.getNextMotion());
           it.remove();
+          deleteVerboseMotion(name, tick, m);
         }
       }
     }
+  }
+
+  private void deleteVerboseMotion(String name, int tick, Motion m) {
+    Iterator<String> it = verboseOps.get(name).iterator();
+    while (it.hasNext()) {
+      String str = it.next();
+      int[] motions = motionParser(str);
+      if (motions[8] == tick) {
+        it.remove();
+      }
+    }
+  }
+
+  /**
+   * Parses a single motion command and stores all the key values in an array.
+   * @param s string to parse
+   * @return an array of shape variables
+   */
+  private int[] motionParser(String s) {
+    int[] arr = new int[16];
+    String str = s.substring(8);
+    Scanner scan = new Scanner(str);
+    int i = 0;
+    scan.next();
+    while (scan.hasNextInt()) {
+      arr[i] = scan.nextInt();
+      i++;
+    }
+    return arr;
   }
 
   @Override
@@ -448,6 +509,16 @@ public class AnimationModel implements IAnimation {
         m.setNextMotion(motions.getNextMotion());
         m.setPrevMotion(motions.getPrevMotion());
         keyframes.get(name).set(keyframes.get(name).indexOf(motions), m);
+        addVerboseMotion(name, m.getParams()[0], m.getParams()[1],
+                m.getParams()[2],  m.getParams()[3], m.getParams()[4], m.getParams()[5],
+                m.getParams()[6], m.getParams()[7], m.getPrevMotion().getParams()[0],
+                m.getPrevMotion().getParams()[1], m.getPrevMotion().getParams()[2],
+                m.getPrevMotion().getParams()[3], m.getPrevMotion().getParams()[4],
+                m.getPrevMotion().getParams()[5], m.getPrevMotion().getParams()[6],
+                m.getPrevMotion().getParams()[7]);
+        verboseOps.get(name).set(keyframes.get(name).indexOf(motions) + 1,
+                verboseOps.get(name).get(verboseOps.get(name).size() - 1));
+        verboseOps.get(name).remove(verboseOps.get(name).size() - 1);
       }
     }
   }

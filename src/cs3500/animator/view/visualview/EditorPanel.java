@@ -11,6 +11,8 @@ import javax.swing.*;
 
 
 import cs3500.IAnimation;
+import cs3500.animator.view.svgview.SVGView;
+import cs3500.animator.view.textview.TextView;
 import cs3500.motions.Motion;
 
 public class EditorPanel extends JPanel {
@@ -82,8 +84,53 @@ public class EditorPanel extends JPanel {
     this.add(shapePanel);
   }
 
-  private void setSaveWindow() {
+  public void setSaveWindow(int speed) {
+    this.removeAll();
+    this.setBackground(Color.WHITE);
+    JButton save = new JButton("Save File");
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.add(save);
+    JPanel fieldPanel = new JPanel();
+    JPanel filePanel = new JPanel();
+    JTextField fileName = new JTextField();
+    fileName.setColumns(20);
+    JLabel fileLabel = new JLabel("Output Path: ");
+    filePanel.add(fileName, BorderLayout.CENTER);
+    filePanel.add(fileLabel, BorderLayout.WEST);
+    fieldPanel.add(filePanel);
 
+    String[] m = {"SVG", "Text"};
+    JList<String> saveType = new JList(m);
+    saveType.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    saveType.setVisibleRowCount(2);
+    fieldPanel.add(saveType);
+
+    MouseListener ml = new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (saveType.getSelectedIndex() != -1 && e.getSource() == save) {
+          String name = fileName.getText();
+          String t = saveType.getSelectedValue();
+          switch(t) {
+            case "SVG":
+              SVGView svg = new SVGView(rom, name, speed);
+              svg.execute();
+              break;
+            case "Text":
+              TextView tv = new TextView(rom, name);
+              tv.execute();
+              break;
+            default:
+              throw new IllegalArgumentException("Save type is not valid");
+          }
+          finalScreen("Animation is saved, click start to go back to the animation,"
+                  + " or edit to continue editing.");
+        }
+      }
+    };
+    save.addMouseListener(ml);
+    this.add(fieldPanel, Component.CENTER_ALIGNMENT);
+    this.add(buttonPanel, Component.CENTER_ALIGNMENT);
   }
 
   private void createShape() {
@@ -135,7 +182,6 @@ public class EditorPanel extends JPanel {
   private void setKeyFramesWindow(List<Motion> lm) {
     this.removeAll();
     this.setBackground(Color.WHITE);
-    System.out.println(lm.size());
     String[] m = new String[lm.size()];
     int i = 0;
     for (Motion motion : lm) {

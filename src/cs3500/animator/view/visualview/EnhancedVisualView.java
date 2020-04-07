@@ -131,7 +131,8 @@ public class EnhancedVisualView extends JFrame implements IView {
           refresh();
         }
         else if (e.getSource() == save) {
-
+          editPanel.setSaveWindow(listener.getSpeed());
+          refresh();
         }
         else if (e.getSource() == load) {
 
