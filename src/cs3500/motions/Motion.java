@@ -2,12 +2,13 @@ package cs3500.motions;
 
 import java.awt.Color;
 import cs3500.IElement;
+import cs3500.IKeyFrame;
 import cs3500.elements.Posn;
 
 /**
  * Class to represent a motion/keyframe, and calculate the changes of an element over time.
  */
-public class Motion {
+public class Motion implements IKeyFrame {
   private IElement element;
   private Motion prevMotion;
   private Motion nextMotion;
@@ -48,10 +49,7 @@ public class Motion {
     this.nextMotion = null;
   }
 
-  /**
-   * Method to change elements when the motion is supposed to be executed.
-   * @param currentTick current tick in the animation
-   */
+  @Override
   public void fire(int currentTick) {
     if (prevMotion == null && currentTick == t) {
       this.element.setPosn(new Posn(x, y));
@@ -120,42 +118,27 @@ public class Motion {
     }
   }
 
-  /**
-   * Gets the parameters of the keyframe.
-   * @return an array of parameters
-   */
+  @Override
   public int[] getParams() {
     return new int[] {t, x, y, w, h, r, g, b};
   }
 
-  /**
-   * Set the next motion of the key frame.
-   * @param m next motion
-   */
+  @Override
   public void setNextMotion(Motion m) {
     this.nextMotion = m;
   }
 
-  /**
-   * Set the previous motion of the key frame.
-   * @param m previous motion
-   */
+  @Override
   public void setPrevMotion(Motion m) {
     this.prevMotion = m;
   }
 
-  /**
-   * Get the previous motion of the key frame.
-   * @return previous motion
-   */
+  @Override
   public Motion getPrevMotion() {
     return prevMotion;
   }
 
-  /**
-   * Get the next motion of the key frame.
-   * @return next motion
-   */
+  @Override
   public Motion getNextMotion() {
     return nextMotion;
   }
