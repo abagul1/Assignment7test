@@ -54,4 +54,3 @@ Operational Notes:
 
     And please select a key frame from the options before clicking the edit or delete buttons.
 
-test
